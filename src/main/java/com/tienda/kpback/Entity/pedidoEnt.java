@@ -24,12 +24,8 @@ public class pedidoEnt implements Serializable {
     private Integer id;
 
     @Column(nullable = false)
-    @Size(min=1, max=30)
+    @Size(min=1, max=50)
     private String nombresCliente;
-
-    @Column(nullable = false)
-    @Size(min = 1, max = 30)
-    private String apellidosCliente;
 
     @Column(nullable = false)
     @Size(min=10, max=10)
@@ -43,8 +39,4 @@ public class pedidoEnt implements Serializable {
     @Size(min = 1, max = 30)
     private String direccionCliente;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pedido", cascade = {CascadeType.PERSIST,
-    CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @Column(nullable = true)
-    private List<pedidoEnt> pedidos;
 }

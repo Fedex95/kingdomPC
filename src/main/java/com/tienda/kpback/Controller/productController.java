@@ -12,6 +12,7 @@ import java.util.List;
 
 @SuppressWarnings("ALL")
 @RestController
+
 @RequestMapping("/api")
 @CrossOrigin("*")
 public class productController {
@@ -25,8 +26,8 @@ public class productController {
         return prep.findAll();
     }
 
-    @GetMapping("/products")
-    public ResponseEntity getUserById(@RequestParam Integer id) {
+    @GetMapping("/products/{id}")
+    public ResponseEntity getUserById(@PathVariable Integer id) {
         if (id == null || id < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID invalido");
         }
@@ -61,15 +62,20 @@ public class productController {
         }
     }
 
-    @DeleteMapping("/products/delete")
-    public void DeleteProduct(@RequestBody Integer id) {
+    @DeleteMapping("/products/delete/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
         try {
             if (id == null || id < 0) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID invalido");
             }
+            if (!prep.existsById(id)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+            }
+
             prep.deleteById(id);
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar el producto");
         }
     }
 }
