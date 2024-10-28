@@ -1,13 +1,12 @@
 package com.tienda.kpback.Controller;
 
 import com.tienda.kpback.Entity.Products;
-import com.tienda.kpback.Repository.productRep;
+import com.tienda.kpback.Repository.ProductRep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -15,11 +14,11 @@ import java.util.List;
 
 @RequestMapping("/api")
 @CrossOrigin("*")
-public class productController {
+public class ProductController {
     @Autowired
-    private productRep prep;
+    private ProductRep prep;
     @Autowired
-    private com.tienda.kpback.Repository.productRep productRep;
+    private ProductRep productRep;
 
     @GetMapping("/products")
     public List<Products> getAllProducts() {

@@ -1,14 +1,11 @@
 package com.tienda.kpback.Entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name="pedido")
@@ -17,26 +14,21 @@ import java.util.List;
 @Getter
 @Setter
 
-public class pedidoEnt implements Serializable {
+public class PedidoEnt implements Serializable {
+
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    @Size(min=1, max=50)
-    private String nombresCliente;
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Products producto;
 
     @Column(nullable = false)
-    @Size(min=10, max=10)
-    private int telfCliente;
+    private int cantidad;
 
     @Column(nullable = false)
-    @Size(min = 1, max = 20)
-    private String emailCliente;
-
-    @Column(nullable = false)
-    @Size(min = 1, max = 30)
-    private String direccionCliente;
-
+    private float precioTotal;
 }
