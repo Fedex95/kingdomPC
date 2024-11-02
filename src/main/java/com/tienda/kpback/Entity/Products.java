@@ -37,4 +37,7 @@ public class Products implements Serializable {
 
     @Column(nullable = false)
     private boolean estadoProducto;
+
+    @Column(nullable = false)
+    private String imagenUrl;
 }

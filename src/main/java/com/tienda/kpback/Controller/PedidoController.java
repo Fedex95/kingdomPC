@@ -40,13 +40,13 @@ public class PedidoController {
     public ResponseEntity<PedidoEnt> addPedido(@RequestBody PedidoEnt pedido) {
         try {
             Products producto = productRep.findById(pedido.getProducto().getId())
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Producto no encontrado con ID: " + pedido.getProducto().getId()));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Producto no encontrado con ID: " + pedido.getProducto().getId()));
             pedido.setProducto(producto);
             
             if (pedido.getPrecioTotal() == 0) {
                 pedido.setPrecioTotal(
-                    (producto.getPrecioProducto() * pedido.getCantidad()) + pedido.getValorEnvio()
+                    (producto.getPrecioProducto()) + pedido.getValorEnvio()
                 );
             }
             
@@ -77,7 +77,7 @@ public class PedidoController {
             
             if (pedido.getPrecioTotal() == 0) {
                 pedido.setPrecioTotal(
-                    (producto.getPrecioProducto() * pedido.getCantidad()) + pedido.getValorEnvio());
+                    (producto.getPrecioProducto()) + pedido.getValorEnvio());
             }
 
             PedidoEnt updatedPedido = pedidoRep.save(pedido);
