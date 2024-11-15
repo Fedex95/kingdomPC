@@ -48,17 +48,4 @@ public class PedidoEnt implements Serializable {
     @Column(name = "fecha", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime fecha;
 
-    @Size(min=1, max=100)
-    @Column(nullable = false)
-    private String nombreCliente;
-
-    @Size(min=1, max = 100)
-    @Column(nullable = false)
-    private String apellidoCliente;
-
-    @Size(min=1, max=10)
-    private String telefonoCliente;
-
-    @Size(min=1, max=100)
-    private String correoCliente;
 }
