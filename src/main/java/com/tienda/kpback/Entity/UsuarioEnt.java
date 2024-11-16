@@ -39,5 +39,6 @@ public class UsuarioEnt implements Serializable {
     private String password;
 
     @Column(nullable = false)
+    @Size(max=10)
     private String numeroTelefono;
 }
