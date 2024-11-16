@@ -29,17 +29,23 @@ public class UsuarioEnt implements Serializable {
     @Column(nullable = false)
     private String apellido;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nombreUsuario;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String correo;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column
     private String rolUsuario;
+    @PrePersist
+    public void prePersist(){
+        if(this.rolUsuario == null || this.rolUsuario.isEmpty()){
+            this.rolUsuario = "USER";
+        }
+    }
 
     @Column(nullable = false, unique = true)
     @Size(max = 10)
@@ -49,12 +55,18 @@ public class UsuarioEnt implements Serializable {
     @Size(max=10)
     private String numeroTelefono;
 
-    @Column(nullable = false)
-    private String nombreTarjeta;
+    @Column
+    private String tipoTarjeta;
 
-    @Column(nullable = false)
+    @Column
+    private String nombrTarjeta;
+
+    @Column
+    private String nombreUsuarioTarjeta;
+
+    @Column
     private String numeroTarjeta;
 
-    @Column(nullable = false)
+    @Column
     private String fechaValidez;
 }

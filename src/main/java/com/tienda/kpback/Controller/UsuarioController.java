@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("All")
 @RestController
@@ -34,14 +35,22 @@ public class UsuarioController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/usuarios/add")
-    public ResponseEntity addUsuario(@RequestBody UsuarioEnt usuario){
-        try{
+    @PostMapping("/usuarios/add")
+    public ResponseEntity<UsuarioEnt> addUsuario(@RequestBody UsuarioEnt usuario) {
+        try {
             UsuarioEnt usuariosSaved = usuarioRep.save(usuario);
             return new ResponseEntity<>(usuariosSaved, HttpStatus.CREATED);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+
+        return ResponseEntity.ok("Usuario autenticado con éxito");
     }
 
     @PutMapping("/usuarios/update")
