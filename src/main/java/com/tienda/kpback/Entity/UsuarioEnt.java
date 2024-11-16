@@ -39,6 +39,22 @@ public class UsuarioEnt implements Serializable {
     private String password;
 
     @Column(nullable = false)
+    private String rolUsuario;
+
+    @Column(nullable = false, unique = true)
+    @Size(max = 10)
+    private String cedula;
+
+    @Column(nullable = false)
     @Size(max=10)
     private String numeroTelefono;
+
+    @Column(nullable = false)
+    private String nombreTarjeta;
+
+    @Column(nullable = false)
+    private String numeroTarjeta;
+
+    @Column(nullable = false)
+    private String fechaValidez;
 }

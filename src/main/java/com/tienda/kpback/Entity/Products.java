@@ -29,8 +29,11 @@ public class Products implements Serializable {
     private String nombreProducto;
 
     @Column(nullable = false)
-    @Size(min=1, max=100)
+    @Size(min=1, max=200)
     private String descripcionProducto;
+
+    @Column(nullable = false)
+    private String categoriaProducto;
 
     @Column(nullable = false)
     private float precioProducto;

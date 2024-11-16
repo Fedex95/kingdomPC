@@ -47,5 +47,4 @@ public class PedidoEnt implements Serializable {
 
     @Column(name = "fecha", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime fecha;
-
 }
