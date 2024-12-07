@@ -34,7 +34,7 @@ public class HistorialService {
             PedidoDetalle detalle = new PedidoDetalle();
             detalle.setNombreProducto(item.getProducto().getNombre());
             detalle.setCantidad(item.getCantidad());
-            detalle.setPrecio(item.getProducto().getPrecio() * item.getCantidad());
+            detalle.setPrecio(item.getProducto().getPrecio());
             return detalle;
         }).collect(Collectors.toList());
 
