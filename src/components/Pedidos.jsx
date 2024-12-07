@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TreeTable } from 'primereact/treetable';
+import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
 export default function Pedidos({ userId }) {
@@ -29,45 +29,52 @@ export default function Pedidos({ userId }) {
         if (!detalles || !Array.isArray(detalles)) return 0;
 
         return detalles.reduce((total, detalle) => {
-            return total + (detalle.precio || 0);
+            return total + (detalle.precio || 0) * (detalle.cantidad || 1);
         }, 0);
     };
 
     const transformarPedidos = (pedidos) => {
         return (pedidos || []).map((pedido) => {
             const total = calcularTotal(pedido.detalles || []);
-
             return {
-                key: pedido.id,
-                data: {
-                    fechaCompra: new Date(pedido.fecha).toLocaleString(),
-                    total,
-                    usuario: `${pedido.usuario.nombre} (${pedido.usuario.usuario})`,
-                },
-                children: (pedido.detalles || []).map((detalle) => ({
-                    key: detalle.id,
-                    data: {
-                        nombreProducto: detalle.nombreProducto,
-                        cantidad: detalle.cantidad,
-                        precio: detalle.precio,
-                    },
-                })),
+                fechaCompra: new Date(pedido.fecha).toLocaleString(),
+                usuario: `${pedido.usuario.nombre} (${pedido.usuario.usuario})`,
+                total: total.toFixed(2),
+                detalles: pedido.detalles || [],
             };
         });
     };
 
-    const nodes = transformarPedidos(pedidos);
+    const transformedPedidos = transformarPedidos(pedidos);
 
     return (
         <div className="card">
-            <TreeTable value={nodes} tableStyle={{ minWidth: '50rem' }}>
-                <Column field="fechaCompra" header="Fecha de compra" expander />
-                <Column field="usuario" header="Usuario" />
-                <Column field="total" header="Total" body={(rowData) => <span>${rowData.data.total}</span>} />
-                <Column field="nombreProducto" header="Nombre" />
-                <Column field="cantidad" header="Cantidad" />
-                <Column field="precio" header="Precio" />
-            </TreeTable>
+            <DataTable value={transformedPedidos} tableStyle={{ minWidth: '50rem' }}>
+                <Column field="fechaCompra" header="Fecha de compra" />
+                <Column 
+                    field="total" 
+                    header="Total" 
+                    body={(rowData) => <span>${rowData.total}</span>} 
+                />
+                <Column
+                    header="Nombre del producto"
+                    body={(rowData) => rowData.detalles.map((detalle, index) => (
+                        <div key={index}>{detalle.nombreProducto}</div>
+                    ))}
+                />
+                <Column
+                    header="Cantidad"
+                    body={(rowData) => rowData.detalles.map((detalle, index) => (
+                        <div key={index}>{detalle.cantidad}</div>
+                    ))}
+                />
+                <Column
+                    header="Precio"
+                    body={(rowData) => rowData.detalles.map((detalle, index) => (
+                        <div key={index}>{detalle.precio.toFixed(2)}</div>
+                    ))}
+                />
+            </DataTable>
         </div>
     );
 }

@@ -4,7 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import '../styles/Register.css';
-import PasswordInput from 'prime-react/PasswordInput';
+import { Password } from 'primereact/password';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -184,7 +184,7 @@ function Register() {
             />
 
             <label htmlFor="pass">Contraseña</label>
-            <PasswordInput
+            <Password
               id="pass"
               name="pass"
               value={formData.pass}
