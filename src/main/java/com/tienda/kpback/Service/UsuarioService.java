@@ -4,6 +4,7 @@ import com.tienda.kpback.Config.Pass;
 import com.tienda.kpback.Entity.Cart;
 import com.tienda.kpback.Entity.UsuarioEnt;
 import com.tienda.kpback.Repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,12 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    @Transactional
     public Optional<UsuarioEnt> getUsuarioById(Long id){
         return usuarioRepository.findById(id);
     }
 
+    @Transactional
     public Optional<UsuarioEnt> getUsuarioByUsuario(String usuario){
         return usuarioRepository.findByUsuario(usuario);
     }
@@ -33,7 +36,7 @@ public class UsuarioService {
             String encodedPass = Pass.encrip(usuario.getPass());
             usuario.setPass(encodedPass);
 
-            if(usuario.getCart() != null){
+            if(usuario.getCart() == null){
                 Cart cart = new Cart();
                 cart.setUsuario(usuario);
                 usuario.setCart(cart);

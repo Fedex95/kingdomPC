@@ -32,7 +32,7 @@ public class UsuarioEnt {
     private String fechaValidez;
     private String cvv;
 
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Cart cart;
 
