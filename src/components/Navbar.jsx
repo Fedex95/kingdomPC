@@ -9,8 +9,9 @@ import 'primeicons/primeicons.css';
 
 
 
-function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu }) {
+function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu, userData }) {
     return (
+
         <nav
             style={{
                 display: 'flex',
@@ -22,14 +23,22 @@ function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu }) {
                 color: 'white'
             }}
         >
+
             {/* Contenedor de la marca */}
             <Link to="/home" style={{ fontSize: '1.5rem', color: 'white' }}>
                 Electro Master
             </Link>
 
-            {/* Contenedor de los botones del carrito y usuario alineados a la derecha */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {/* Pasamos userData al componente Notificaciones */}
+
+                <div>
+                    <p>{userData?.nombre || ''}</p>
+                </div>
+                <div>
+                    <p>{userData?.apellido || ''}</p>
+                </div>
+
                 <Link to="/cart">
                     <Button
                         icon="pi pi-shopping-cart"
