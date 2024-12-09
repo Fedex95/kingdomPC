@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
@@ -11,13 +11,9 @@ function Cart({ userData }) {
     const toast = useRef(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (userData?.id) {
-            fetchCartItems();
-        }
-    }, [userData]);
+    
 
-    const fetchCartItems = async () => {
+    const fetchCartItems = useCallback(async () => {
         try {
             const response = await fetch(`http://localhost:8080/usuarios/get/all`);
 
@@ -43,9 +39,20 @@ function Cart({ userData }) {
                 life: 3000
             });
         }
-    };
+    }, [userData.id]);
+
+    useEffect(() => {
+        if (userData?.id) {
+            fetchCartItems();
+        }
+    }, [userData, fetchCartItems]);
 
     const removeItem = async (cartId, itemId) => {
+        if (!cartId) {
+            console.error('Cart ID is undefined. Cannot remove item.');
+            return;
+        }
+
         try {
             const response = await fetch(`http://localhost:8080/cart/eliminar/${cartId}/${itemId}`, {
                 method: 'DELETE',

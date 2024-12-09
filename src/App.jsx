@@ -12,19 +12,32 @@ import PerfilUsuario from './components/PerfilUsuario';
 import AdminView from './components/Adminview';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('isAuthenticated') === 'true';
+  });
+
+  const [userData, setUserData] = useState(() => {
+    const savedUser = localStorage.getItem('userData');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const [admin, setAdmin] = useState(()=>{
+    return localStorage.getItem('admin') === 'true';
+  });
+
   const [cartItems, setCartItems] = useState([]);
-  const [admin, setAdmin] = useState(false);
 
   const handleLogin = (data) => {
     setIsAuthenticated(true);
     setUserData(data);
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('userData', JSON.stringify(data));
 
     fetch(`http://localhost:8080/usuarios/${data.id}/admin`)
       .then(response => response.json())
       .then(isAdminResponse => {
         setAdmin(isAdminResponse);
+        localStorage.setItem('admin', isAuthenticated);
       })
       .catch((error) => console.error('Error verifying admin status:', error));
   };
@@ -33,7 +46,10 @@ function App() {
     setIsAuthenticated(false);
     setUserData(null);
     setCartItems([]);
-    setAdmin(false); 
+    setAdmin(false);
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('admin');
   };
 
   return (

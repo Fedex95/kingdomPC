@@ -32,7 +32,7 @@ export default function Pedido({ userData }) {
                     <div className="p-grid">
                         <div className="p-col-12 p-md-4">
                             <div className="font-bold">ID Pedido: {pedido.id}</div>
-                            <div>Fecha de Compra: {new Date(pedido.fecha).toLocaleDateString()}</div>
+                            <div>Fecha de Compra: {new Date(pedido.fecha).toLocaleDateString('es-EC')}</div>
                             <div>Cliente: {pedido.usuario.nombre}</div>
                             
                         <div className="p-col-12 p-md-8">

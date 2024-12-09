@@ -37,7 +37,7 @@ export default function Pedidos({ userId }) {
         return (pedidos || []).map((pedido) => {
             const total = calcularTotal(pedido.detalles || []);
             return {
-                fechaCompra: new Date(pedido.fecha).toLocaleString(),
+                fechaCompra: new Date(pedido.fecha).toLocaleDateString('es-EC'),
                 usuario: `${pedido.usuario.nombre} (${pedido.usuario.usuario})`,
                 total: total.toFixed(2),
                 detalles: pedido.detalles || [],

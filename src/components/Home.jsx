@@ -460,7 +460,7 @@ function Home({ userData }) {
                                 icon="pi pi-cart-plus"
                                 className="p-button-success p-mt-3 p-button-rounded"
                                 style={{
-                                    width: '70%', // Botón más pequeño
+                                    width: '70%',
                                     padding: '10px 0',
                                     fontSize: '14px',
                                     fontWeight: 'bold',
