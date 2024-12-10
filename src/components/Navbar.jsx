@@ -8,18 +8,17 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
 
-
 function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu, userData }) {
     return (
 
-        <nav
+        <nav 
             style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: '1rem',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                backgroundColor: '#333',
+                backgroundColor: 'darkblue',
                 color: 'white'
             }}
         >
@@ -30,7 +29,7 @@ function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu, use
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                {/* Pasamos userData al componente Notificaciones */}
+                {/*userData*/}
 
                 <div>
                     <p>{userData?.nombre || ''}</p>

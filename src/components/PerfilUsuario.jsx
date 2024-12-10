@@ -8,11 +8,11 @@ export default function Profile({ userData }) {
             <Card className="profile-card">
                 <div className="profile-info">
                     <div className="profile-item">
-                        <h3>Nombre</h3>
+                        <h3>Nombres</h3>
                         <p>{userData?.nombre || 'No disponible'}</p>
                     </div>
                     <div className="profile-item">
-                        <h3>Apellido</h3>
+                        <h3>Apellidos</h3>
                         <p>{userData?.apellido || 'No disponible'}</p>
                     </div>
                     <div className="profile-item">
@@ -38,5 +38,6 @@ export default function Profile({ userData }) {
                 </div>
             </Card>
         </div>
+
     );
 }

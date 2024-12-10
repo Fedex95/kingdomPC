@@ -6,6 +6,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 
+
 function Home({ userData }) {
     const toast = useRef(null);
     const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -47,7 +48,7 @@ function Home({ userData }) {
                 }
             } catch (error) {
                 console.error('Error:', error);
-            } 
+            }
         };
 
         fetchProductos();
@@ -187,96 +188,101 @@ function Home({ userData }) {
 
     const menuTemplate = (producto) => {
         return (
-            <Card
-                className="menu-card p-mr-3 p-shadow-2"
-                style={{
-                    height: '450px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    marginBottom: '20px',
-                    maxWidth: '300px',
-                    marginRight: '15px',
-                    marginLeft: '15px'
-                }}
-                onClick={() => openDialog(producto)}
-            >
-                <img
-                    src={producto.imagenURL}
-                    alt={producto.nombre}
-                    className="menu-image"
-                    onError={(e) => e.target.src = 'https://via.placeholder.com/300'}
+            <div>
+                <Card
+                    className="menu-card p-mr-3 p-shadow-2"
                     style={{
-                        width: '100%',
-                        height: 'auto',
-                        maxHeight: '200px',
-                        objectFit: 'cover',
-                        flexShrink: 0
-                    }}
-                />
-                <div
-                    className="menu-content"
-                    style={{
+                        textAlign:'justify',
+                        height: '450px',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        padding: '15px',
-                        flexGrow: 1
+                        marginBottom: '20px',
+                        maxWidth: '300px',
+                        marginRight: '15px',
+                        marginLeft: '15px',
+                        backgroundColor: ''
                     }}
+                    onClick={() => openDialog(producto)}
                 >
-                    <h3
-                        className="menu-title"
+                    <img
+                        src={producto.imagenURL}
+                        alt={producto.nombre}
+                        className="menu-image"
+                        onError={(e) => e.target.src = 'https://via.placeholder.com/300'}
                         style={{
-                            margin: '10px 0',
-                            fontSize: '16px'
+                            width: '100%',
+                            height: 'auto',
+                            maxHeight: '200px',
+                            objectFit: 'cover',
+                            flexShrink: 0
                         }}
-                    >
-                        {producto.nombre}
-                    </h3>
-                    <p
-                        className="menu-description"
-                        style={{
-                            fontSize: '14px',
-                            color: '#555',
-                            flexGrow: 1,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            display: '-webkit-box',
-                            WebkitBoxOrient: 'vertical',
-                            WebkitLineClamp: 3,
-                        }}
-                    >
-                        {producto.descripcion}
-                    </p>
+                    />
                     <div
-                        className="menu-details"
+                        className="menu-content"
                         style={{
                             display: 'flex',
+                            flexDirection: 'column',
                             justifyContent: 'space-between',
-                            marginBottom: '10px'
+                            padding: '15px',
+                            flexGrow: 1,
+                            backgroundColor: ''
                         }}
                     >
-                        <span
-                            className="menu-price"
+                        <h3
+                            className="menu-title"
                             style={{
-                                fontSize: '18px',
-                                fontWeight: 'bold'
+                                margin: '10px 0',
+                                fontSize: '16px'
                             }}
                         >
-                            ${producto.precio.toFixed(2)}
-                        </span>
-                        <span
-                            className="menu-category"
+                            {producto.nombre}
+                        </h3>
+                        <p
+                            className="menu-description"
                             style={{
                                 fontSize: '14px',
-                                color: '#888'
+                                color: '#555',
+                                flexGrow: 1,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 3,
                             }}
                         >
-                            {categorias[producto.categoria] || producto.categoria}
-                        </span>
+                            {producto.descripcion}
+                        </p>
+                        <div
+                            className="menu-details"
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginBottom: '10px'
+                            }}
+                        >
+                            <span
+                                className="menu-price"
+                                style={{
+                                    fontSize: '18px',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                ${producto.precio.toFixed(2)}
+                            </span>
+                            <span
+                                className="menu-category"
+                                style={{
+                                    fontSize: '14px',
+                                    color: '#888'
+                                }}
+                            >
+                                {categorias[producto.categoria] || producto.categoria}
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </Card>
+                </Card>
+            </div>
         );
     };
 
@@ -302,10 +308,10 @@ function Home({ userData }) {
     ];
 
     return (
-        <>
+        <div>
             <Toast ref={toast} />
             <div style={{ marginBottom: '20px' }}>
-                <Carousel
+                <Carousel className='card-container'
                     value={featuredProducts}
                     itemTemplate={menuTemplate}
                     numVisible={3}
@@ -324,11 +330,12 @@ function Home({ userData }) {
                 header="Especificaciones"
                 visible={dialogVisible}
                 style={{
-                    width: '30vw', 
+                    width: '30vw',
                     padding: '15px',
                     borderRadius: '10px',
                     backgroundColor: '#f5f5f5',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    textAlign:'center'
                 }}
                 onHide={() => setDialogVisible(false)}
                 modal
@@ -342,9 +349,7 @@ function Home({ userData }) {
                         borderRadius: '10px',
                         padding: '20px',
                         marginTop: '10px',
-                        boxShadow: '0px 4px 15px rgba(0,0,0,0.1)',
                         textAlign: 'center',
-                        transition: 'all 0.3s ease',
                     }}
                 >
                     <img
@@ -356,12 +361,8 @@ function Home({ userData }) {
                             maxHeight: '200px',
                             objectFit: 'cover',
                             borderRadius: '10px',
-                            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
                             marginBottom: '15px',
-                            transition: 'transform 0.3s ease',
                         }}
-                        onMouseOver={(e) => (e.target.style.transform = 'scale(1.05)')}
-                        onMouseOut={(e) => (e.target.style.transform = 'scale(1)')}
                     />
                     <h3
                         style={{
@@ -375,7 +376,7 @@ function Home({ userData }) {
                     </h3>
                     <p
                         style={{
-                            fontSize: '14px', 
+                            fontSize: '14px',
                             color: '#555',
                             marginBottom: '12px',
                         }}
@@ -428,7 +429,7 @@ function Home({ userData }) {
                                     className="p-button-rounded p-button-outlined"
                                     style={{
                                         width: '30px',
-                                        height: '30px', 
+                                        height: '30px',
                                         padding: '0',
                                         fontSize: '16px',
                                     }}
@@ -437,7 +438,7 @@ function Home({ userData }) {
                                 />
                                 <span
                                     style={{
-                                        fontSize: '16px', 
+                                        fontSize: '16px',
                                         fontWeight: 'bold',
                                     }}
                                 >
@@ -471,7 +472,7 @@ function Home({ userData }) {
                     )}
                 </div>
             </Dialog>
-        </>
+        </div>
     );
 }
 

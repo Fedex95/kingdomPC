@@ -11,7 +11,7 @@ function Cart({ userData }) {
     const toast = useRef(null);
     const navigate = useNavigate();
 
-    
+
 
     const fetchCartItems = useCallback(async () => {
         try {
@@ -162,12 +162,19 @@ function Cart({ userData }) {
                             <Card key={item.id} className="cart-item">
                                 <div className="cart-item-content">
                                     <img
-                                        src={item.producto?.imagen}
+                                        src={item.producto?.imagenURL}
                                         alt={item.producto?.nombre}
                                         className="cart-item-image"
+                                        style={{
+                                            width: '100%',
+                                            maxHeight: '200px',
+                                            objectFit: 'cover',
+                                            borderRadius: '10px',
+                                            marginBottom: '15px',
+                                        }}
                                         onError={(e) => {
-                                            e.target.onerror = null; 
-                                            e.target.style.display = 'none'; 
+                                            e.target.onerror = null;
+                                            e.target.style.display = 'none';
                                         }}
                                     />
                                     <div className="cart-item-details">
@@ -198,7 +205,7 @@ function Cart({ userData }) {
                             <div className="summary-row">
                                 <span>Subtotal: <span>${calculateTotal().toFixed(2)}</span></span>
                                 <span>Precio incluye IVA</span>
-                                
+
                             </div>
                             <div className="summary-row">
                                 <span>Envío: Gratis</span>

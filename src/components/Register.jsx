@@ -120,7 +120,7 @@ function Register() {
           <h1>Ingrese sus datos personales</h1>
           <div className="form-group">
             <div>
-              <label htmlFor="nombre">Nombre</label>
+              <label htmlFor="nombre">Nombres</label>
               <InputText
                 id="nombre"
                 name="nombre"
@@ -130,7 +130,7 @@ function Register() {
               />
             </div>
             <div>
-              <label htmlFor="apellido">Apellido</label>
+              <label htmlFor="apellido">Apellidos</label>
               <InputText
                 id="apellido"
                 name="apellido"
