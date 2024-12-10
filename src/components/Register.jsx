@@ -113,121 +113,148 @@ function Register() {
       <Toast ref={toast} />
       <div className="image-side">
         <div className="overlay">
-          <p>No te pierdas de nuestras ofertas</p>
         </div>
       </div>
-
       <div className="form-side">
-        <h1>Crear cuenta</h1>
         <form onSubmit={handleSubmit}>
+          <h1>Ingrese sus datos personales</h1>
           <div className="form-group">
-            <h1>Ingrese sus datos personales</h1>
-            <label htmlFor="nombre">Nombre</label>
-            <InputText
-              id="nombre"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              className="w-full"
-            />
-            <label htmlFor="apellido">Apellido</label>
-            <InputText
-              id="apellido"
-              name="apellido"
-              value={formData.apellido}
-              onChange={handleChange}
-              className="w-full"
-            />
-            <label htmlFor="cedula">Cédula</label>
-            <InputText
-              id="cedula"
-              name="cedula"
-              value={formData.cedula}
-              onChange={handleChange}
-              className="w-full"
-            />
-            <label htmlFor="telefono">Teléfono</label>
-            <InputText
-              id="telefono"
-              name="telefono"
-              value={formData.telefono}
-              onChange={handleChange}
-              className="w-full"
-            />
-            <label htmlFor="direccion">Dirección</label>
-            <InputText
-              id="direccion"
-              name="direccion"
-              value={formData.direccion}
-              onChange={handleChange}
-              className="w-full"
-            />
-
-            <label htmlFor="email">Correo</label>
-            <InputText
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="ejemplo@ejemplo.com"
-              className="w-full"
-            />
-
-            <label htmlFor="usuario">Nombre de usuario</label>
-            <InputText
-              id="usuario"
-              name="usuario"
-              value={formData.usuario}
-              onChange={handleChange}
-              className="w-full"
-            />
-
-            <label htmlFor="pass">Contraseña</label>
-            <Password
-              id="pass"
-              name="pass"
-              value={formData.pass}
-              onChange={handleChange}
-              className="w-full"
-            />
+            <div>
+              <label htmlFor="nombre">Nombre</label>
+              <InputText
+                id="nombre"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="apellido">Apellido</label>
+              <InputText
+                id="apellido"
+                name="apellido"
+                value={formData.apellido}
+                onChange={handleChange}
+                className='register-w-full'
+              />
+            </div>
           </div>
           <div className="form-group">
-            <h1>Ingrese un método de pago</h1>
-            <label htmlFor="nombreTarjeta">Titular de la tarjeta</label>
-            <InputText
-              id="nombreTarjeta"
-              name="nombreTarjeta"
-              value={formData.nombreTarjeta}
-              onChange={handleChange}
-              className="w-full"
-            />
-            <label htmlFor="numeroTarjeta">Dígitos</label>
-            <InputText
-              id="numeroTarjeta"
-              name="numeroTarjeta"
-              value={formData.numeroTarjeta}
-              onChange={handleChange}
-              className="w-full"
-            />
-            <label htmlFor="fechaValidez">Fecha de validación</label>
-            <InputText
-              id="fechaValidez"
-              name="fechaValidez"
-              value={formData.fechaValidez}
-              placeholder="15/21"
-              onChange={handleChange}
-              className="w-full"
-            />
-            <label htmlFor="cvv">CVV</label>
-            <InputText
-              id="cvv"
-              name="cvv"
-              value={formData.cvv}
-              placeholder="Revise al reverso de la tarjeta"
-              onChange={handleChange}
-              className="w-full"
-            />
+            <div>
+              <label htmlFor="cedula">Cédula</label>
+              <InputText
+                id="cedula"
+                name="cedula"
+                value={formData.cedula}
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="telefono">Teléfono</label>
+              <InputText
+                id="telefono"
+                name="telefono"
+                value={formData.telefono}
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <div>
+              <label htmlFor="direccion">Dirección</label>
+              <InputText
+                id="direccion"
+                name="direccion"
+                value={formData.direccion}
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="email">Correo</label>
+              <InputText
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="ejemplo@ejemplo.com"
+                className="register-w-full"
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <div>
+              <label htmlFor="usuario">Nombre de usuario</label>
+              <InputText
+                id="usuario"
+                name="usuario"
+                value={formData.usuario}
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="pass">Contraseña</label>
+              <Password
+                id="pass"
+                name="pass"
+                value={formData.pass}
+                onChange={handleChange}
+                className="w-full-pass"
+              />
+            </div>
+          </div>
+
+          <h1>Ingrese un método de pago</h1>
+          <div className="form-group">
+            <div>
+              <label htmlFor="nombreTarjeta">Titular de la tarjeta</label>
+              <InputText
+                id="nombreTarjeta"
+                name="nombreTarjeta"
+                value={formData.nombreTarjeta}
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="numeroTarjeta">Dígitos</label>
+              <InputText
+                id="numeroTarjeta"
+                name="numeroTarjeta"
+                value={formData.numeroTarjeta}
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <div>
+              <label htmlFor="fechaValidez">Fecha de validación</label>
+              <InputText
+                id="fechaValidez"
+                name="fechaValidez"
+                value={formData.fechaValidez}
+                placeholder="15/21"
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="cvv">CVV</label>
+              <InputText
+                id="cvv"
+                name="cvv"
+                value={formData.cvv}
+                placeholder="Revise al reverso de la tarjeta"
+                onChange={handleChange}
+                className="register-w-full"
+              />
+            </div>
           </div>
 
           <Button
