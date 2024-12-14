@@ -49,7 +49,8 @@ public class ProductoController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<Producto> updateProducto(@RequestParam Long userId, @PathVariable Long id, @RequestBody Producto producto){
         if(usuarioService.Admin(userId)){
-            Producto createdPr = productoService.saveProducto(producto);
+            producto.setId(id);
+            Producto createdPr = productoService.updateProducto(producto);
             return new ResponseEntity<>(createdPr, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

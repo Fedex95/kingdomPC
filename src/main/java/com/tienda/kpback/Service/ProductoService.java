@@ -2,6 +2,7 @@ package com.tienda.kpback.Service;
 
 import com.tienda.kpback.Entity.Producto;
 import com.tienda.kpback.Repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 
+    @Transactional
     public Producto updateProducto(Producto producto){
         Optional <Producto> existing = productoRepository.findById(producto.getId());
         if(existing.isPresent()){
