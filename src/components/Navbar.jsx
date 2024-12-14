@@ -11,7 +11,7 @@ import 'primeicons/primeicons.css';
 function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu, userData }) {
     return (
 
-        <nav 
+        <nav
             style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -28,15 +28,16 @@ function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu, use
                 Electro Master
             </Link>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 {/*userData*/}
 
                 <div>
                     <p>{userData?.nombre || ''}</p>
                 </div>
-                <div>
+                <div style={{ marginRight: '10px' }}>
                     <p>{userData?.apellido || ''}</p>
                 </div>
+
 
                 <Link to="/cart">
                     <Button

@@ -5,13 +5,10 @@ import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Cart.css';
 
-
 function Cart({ userData }) {
     const [cartItems, setCartItems] = useState([]);
     const toast = useRef(null);
     const navigate = useNavigate();
-
-
 
     const fetchCartItems = useCallback(async () => {
         try {
@@ -139,51 +136,45 @@ function Cart({ userData }) {
     };
 
     return (
-        <div className="cart-container">
+        <div className="cart-container p-4">
             <Toast ref={toast} />
-            <h1 className="cart-title">Carrito</h1>
+            <h1 className="cart-title text-center text-3xl font-semibold mb-6">Carrito</h1>
 
             {cartItems.length === 0 ? (
-                <Card className="empty-cart">
-                    <div className="empty-cart-content">
-                        <i className="pi pi-shopping-cart" style={{ fontSize: '3rem' }}></i>
-                        <h2>Tu carrito está vacío</h2>
+                <Card className="empty-cart p-4">
+                    <div className="empty-cart-content text-center">
+                        <i className="pi pi-shopping-cart text-5xl mb-4"></i>
+                        <h2 className="text-xl">Tu carrito está vacío</h2>
                         <Button
                             label="Catálogo"
                             icon="pi pi-list"
                             onClick={() => navigate('/home')}
+                            className="p-button-primary mt-4"
                         />
                     </div>
                 </Card>
             ) : (
                 <div className="cart-content">
-                    <div className="cart-items">
+                    <div className="cart-items grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {cartItems.map(item => (
-                            <Card key={item.id} className="cart-item">
-                                <div className="cart-item-content">
+                            <Card key={item.id} className="cart-item p-3 flex flex-col justify-between">
+                                <div className="cart-item-content flex flex-col items-start">
                                     <img
                                         src={item.producto?.imagenURL}
                                         alt={item.producto?.nombre}
-                                        className="cart-item-image"
-                                        style={{
-                                            width: '100%',
-                                            maxHeight: '200px',
-                                            objectFit: 'cover',
-                                            borderRadius: '10px',
-                                            marginBottom: '15px',
-                                        }}
+                                        className="cart-item-image w-72 h-72 object-cover rounded-lg mb-4"
                                         onError={(e) => {
                                             e.target.onerror = null;
                                             e.target.style.display = 'none';
                                         }}
                                     />
-                                    <div className="cart-item-details">
-                                        <h3>{item.producto?.nombre}</h3>
-                                        <p className="cart-item-price">
+                                    <div className="cart-item-details text-left w-full">
+                                        <h3 className="text-lg font-medium">{item.producto?.nombre}</h3>
+                                        <p className="cart-item-price text-xl text-green-600">
                                             ${item.producto?.precio}
                                         </p>
                                     </div>
-                                    <div className="cart-item-actions">
+                                    <div className="cart-item-actions mt-3 flex justify-between w-full">
                                         <span className="cart-item-quantity">
                                             Cantidad: {item.cantidad}
                                         </span>
@@ -199,25 +190,25 @@ function Cart({ userData }) {
                         ))}
                     </div>
 
-                    <Card className="cart-summary">
-                        <h3>Resumen del Pedido</h3>
-                        <div className="cart-summary-content">
-                            <div className="summary-row">
+                    <Card className="cart-summary mt-6 p-4">
+                        <h3 className="text-xl font-semibold">Resumen del Pedido</h3>
+                        <div className="cart-summary-content mt-4">
+                            <div className="summary-row flex justify-between py-2">
                                 <span>Subtotal: <span>${calculateTotal().toFixed(2)}</span></span>
-                                <span>Precio incluye IVA</span>
-
                             </div>
-                            <div className="summary-row">
-                                <span>Envío: Gratis</span>
+                            <span className='justify-between py-2'> Precio incluye IVA</span>
+                            <div className="summary-row flex justify-between py-2">
+                                <span>Envío:</span>
+                                <span>Gratis</span>
                             </div>
-                            <div className="summary-total">
+                            <div className="summary-total flex justify-between py-3 border-t mt-4">
                                 <span>Total:</span>
-                                <span>${calculateTotal().toFixed(2)}</span>
+                                <span className="font-semibold">${calculateTotal().toFixed(2)}</span>
                             </div>
                             <Button
-                                label="Proceder al Pago"
+                                label="Proceder al pago"
                                 icon="pi pi-shopping-cart"
-                                className="p-button-success p-button-raised"
+                                className="p-button-success p-button-raised mt-4 w-full"
                                 onClick={handlePayment}
                                 disabled={cartItems.length === 0}
                             />
@@ -227,7 +218,6 @@ function Cart({ userData }) {
             )}
         </div>
     );
-
 }
 
 export default Cart;

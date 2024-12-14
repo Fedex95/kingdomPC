@@ -6,7 +6,6 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 
-
 function Home({ userData }) {
     const toast = useRef(null);
     const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -27,7 +26,7 @@ function Home({ userData }) {
         { label: 'Fuente de Poder', value: 'FuentePoder' },
         { label: 'Ventilador', value: 'Ventilador' },
         { label: 'Monitores', value: 'Monitores' }
-    ]
+    ];
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -82,10 +81,7 @@ function Home({ userData }) {
     };
 
     const addToCart = async (productoId) => {
-        console.log('userData en addToCart:', userData);
-
         if (!userData || !userData.id) {
-            console.log('No hay userData o userData.id');
             toast.current.show({
                 severity: 'error',
                 summary: 'Error',
@@ -108,13 +104,6 @@ function Home({ userData }) {
 
         try {
             const quantity = quantities[productoId] || 1;
-
-            console.log('Enviando datos:', {
-                usuarioId: userData.id,
-                productoId: productoId,
-                cantidad: quantity
-            });
-
             const response = await fetch('http://localhost:8080/cart/agregar', {
                 method: 'POST',
                 headers: {
@@ -139,7 +128,6 @@ function Home({ userData }) {
             });
 
         } catch (error) {
-            console.error('Error completo:', error);
             toast.current.show({
                 severity: 'error',
                 summary: 'Error',
@@ -155,10 +143,10 @@ function Home({ userData }) {
     };
 
     const quantityTemplate = (productoId, currentQuantity, onQuantityChange) => (
-        <div className="p-d-flex p-ai-center">
+        <div className="p-d-flex p-ai-center space-x-2">
             <Button
                 icon="pi pi-minus"
-                className="p-button-rounded p-mr-2"
+                className="p-button-rounded p-button-outlined p-mr-2"
                 onClick={(e) => {
                     e.stopPropagation();
                     onQuantityChange(productoId, Math.max(1, currentQuantity - 1));
@@ -176,7 +164,7 @@ function Home({ userData }) {
             />
             <Button
                 icon="pi pi-plus"
-                className="p-button-rounded p-ml-2"
+                className="p-button-rounded p-button-outlined p-ml-2"
                 onClick={(e) => {
                     e.stopPropagation();
                     onQuantityChange(productoId, Math.min(10, currentQuantity + 1));
@@ -186,105 +174,43 @@ function Home({ userData }) {
         </div>
     );
 
-    const menuTemplate = (producto) => {
-        return (
-            <div>
-                <Card
-                    className="menu-card p-mr-3 p-shadow-2"
-                    style={{
-                        textAlign:'justify',
-                        height: '450px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        marginBottom: '20px',
-                        maxWidth: '300px',
-                        marginRight: '15px',
-                        marginLeft: '15px',
-                        backgroundColor: ''
-                    }}
-                    onClick={() => openDialog(producto)}
-                >
-                    <img
-                        src={producto.imagenURL}
-                        alt={producto.nombre}
-                        className="menu-image"
-                        onError={(e) => e.target.src = 'https://via.placeholder.com/300'}
-                        style={{
-                            width: '100%',
-                            height: 'auto',
-                            maxHeight: '200px',
-                            objectFit: 'cover',
-                            flexShrink: 0
-                        }}
-                    />
-                    <div
-                        className="menu-content"
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            padding: '15px',
-                            flexGrow: 1,
-                            backgroundColor: ''
-                        }}
-                    >
-                        <h3
-                            className="menu-title"
-                            style={{
-                                margin: '10px 0',
-                                fontSize: '16px'
-                            }}
-                        >
-                            {producto.nombre}
-                        </h3>
-                        <p
-                            className="menu-description"
-                            style={{
-                                fontSize: '14px',
-                                color: '#555',
-                                flexGrow: 1,
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                WebkitLineClamp: 3,
-                            }}
-                        >
-                            {producto.descripcion}
-                        </p>
-                        <div
-                            className="menu-details"
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                marginBottom: '10px'
-                            }}
-                        >
-                            <span
-                                className="menu-price"
-                                style={{
-                                    fontSize: '18px',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                                ${producto.precio.toFixed(2)}
-                            </span>
-                            <span
-                                className="menu-category"
-                                style={{
-                                    fontSize: '14px',
-                                    color: '#888'
-                                }}
-                            >
-                                {categorias[producto.categoria] || producto.categoria}
-                            </span>
-                        </div>
-                    </div>
-                </Card>
+    const menuTemplate = (producto) => (
+        <Card
+            className="menu-card p-shadow-2 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4"
+            style={{
+                height: '450px',
+                marginBottom: '20px',
+            }}
+            onClick={() => openDialog(producto)}
+        >
+            <img
+                src={producto.imagenURL}
+                alt={producto.nombre}
+                className="menu-image"
+                onError={(e) => e.target.src = 'https://via.placeholder.com/300'}
+                style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '200px',
+                    objectFit: 'cover',
+                    flexShrink: 0
+                }}
+            />
+            <div className="menu-content flex flex-col justify-between p-4">
+                <h3 className="menu-title text-lg font-semibold">{producto.nombre}</h3>
+                <p className="menu-description text-sm text-gray-600 line-clamp-3">
+                    {producto.descripcion}
+                </p>
+                <div className="menu-details flex justify-between mt-2">
+                    <span className="menu-price text-xl font-bold">${producto.precio.toFixed(2)}</span>
+                    <span className="menu-category text-sm text-gray-500">
+                        {categorias[producto.categoria] || producto.categoria}
+                    </span>
+                </div>
             </div>
-        );
-    };
+        </Card>
+    );
+
 
     const responsiveOptions = [
         {
@@ -308,21 +234,18 @@ function Home({ userData }) {
     ];
 
     return (
-        <div>
+        <div className="p-4">
             <Toast ref={toast} />
-            <div style={{ marginBottom: '20px' }}>
-                <Carousel className='card-container'
+            <div className="mb-4">
+                <Carousel
+                    className='card-container'
                     value={featuredProducts}
                     itemTemplate={menuTemplate}
                     numVisible={3}
                     numScroll={1}
                     responsiveOptions={responsiveOptions}
                     circular
-                    autoplay
-                    autoplayInterval={3000}
-                    style={{
-                        marginBottom: '20px',
-                    }}
+                    style={{ marginLeft: '10px', marginRight: '10px', display:'grid', gap:'20px' }} // Aquí aplicamos márgenes al contenedor
                 />
             </div>
 
@@ -335,7 +258,7 @@ function Home({ userData }) {
                     borderRadius: '10px',
                     backgroundColor: '#f5f5f5',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                    textAlign:'center'
+                    textAlign: 'center'
                 }}
                 onHide={() => setDialogVisible(false)}
                 modal

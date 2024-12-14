@@ -40,6 +40,7 @@
 .form-side {
     flex: 1;
     padding: 1rem;
+    color: black;
     background: linear-gradient(90deg, #4441e0 0%, #6d30bd 100%);
     justify-content: center;
     display: grid;

@@ -26,7 +26,7 @@ const AddProduct = ({ userId, onClose }) => {
     { label: 'Accesorios', value: 'Accesorios' },
     { label: 'Fuente de Poder', value: 'FuentePoder' },
     { label: 'Ventilador', value: 'Ventilador' },
-    { label: 'Monitores', value: 'Monitores' }
+    { label: 'Monitores', value: 'Monitor' }
 ]
 
   const handleSubmit = async () => {
@@ -61,13 +61,13 @@ const AddProduct = ({ userId, onClose }) => {
       );
 
       if (!response.ok) {
-        throw new Error('No se pudo crear el menú. Verifique si el usuario es administrador.');
+        throw new Error('No se pudo añadir el producto. Verifique si el usuario es administrador.');
       }
 
       toast.current.show({
         severity: 'success',
         summary: 'Menú creado',
-        detail: 'El menú se ha creado exitosamente.',
+        detail: 'El producto se ha añadido exitosamente.',
         life: 3000,
       });
 

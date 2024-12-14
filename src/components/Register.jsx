@@ -69,7 +69,6 @@ function Register() {
     };
 
     try {
-
       const response = await fetch('http://localhost:8080/usuarios/createUsuario', {
         method: 'POST',
         headers: {
@@ -77,7 +76,6 @@ function Register() {
         },
         body: JSON.stringify(userData),
       });
-
 
       if (response.ok) {
         toast.current.show({
@@ -107,18 +105,16 @@ function Register() {
     }
   };
 
-
   return (
     <div className="register">
       <Toast ref={toast} />
       <div className="image-side">
-        <div className="overlay">
-        </div>
+        <div className="overlay"></div>
       </div>
       <div className="form-side">
         <form onSubmit={handleSubmit}>
           <h1>Ingrese sus datos personales</h1>
-          <div className="form-group">
+          <div className="form-group grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="nombre">Nombres</label>
               <InputText
@@ -140,7 +136,8 @@ function Register() {
               />
             </div>
           </div>
-          <div className="form-group">
+
+          <div className="form-group grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="cedula">Cédula</label>
               <InputText
@@ -162,7 +159,8 @@ function Register() {
               />
             </div>
           </div>
-          <div className="form-group">
+
+          <div className="form-group grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="direccion">Dirección</label>
               <InputText
@@ -186,7 +184,8 @@ function Register() {
               />
             </div>
           </div>
-          <div className="form-group">
+
+          <div className="form-group grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="usuario">Nombre de usuario</label>
               <InputText
@@ -210,7 +209,7 @@ function Register() {
           </div>
 
           <h1>Ingrese un método de pago</h1>
-          <div className="form-group">
+          <div className="form-group grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="nombreTarjeta">Titular de la tarjeta</label>
               <InputText
@@ -232,7 +231,8 @@ function Register() {
               />
             </div>
           </div>
-          <div className="form-group">
+
+          <div className="form-group grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="fechaValidez">Fecha de validación</label>
               <InputText
@@ -260,11 +260,11 @@ function Register() {
           <Button
             label="Registrarse"
             icon="pi pi-user-plus"
-            className="register-button"
+            className="register-button w-full"
           />
-          <div className="login-prompt">
+          <div className="login-prompt text-center mt-4">
             ¿Ya tienes una cuenta?{' '}
-            <Link to="/login" className="login-link">
+            <Link to="/login" className="login-link text-blue-600 hover:underline">
               Inicia sesión
             </Link>
           </div>

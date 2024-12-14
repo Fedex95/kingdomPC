@@ -38,7 +38,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
                 toast.current.show({
                     severity: 'error',
                     summary: 'Error',
-                    detail: 'No se pudieron cargar los menús.',
+                    detail: 'No se pudieron cargar los productos.',
                     life: 3000,
                 });
             });
@@ -68,13 +68,13 @@ export default function UpdateProducto({ userId, toast, onClose }) {
             toast.current.show({
                 severity: 'warn',
                 summary: 'Advertencia',
-                detail: 'Por favor, selecciona un menú para actualizar.',
+                detail: 'Por favor, selecciona un producto para actualizar.',
                 life: 3000,
             });
             return;
         }
 
-        fetch(`http://localhost:8080/product/edit/${selectedProducto}?userId=${userId}`, {
+        fetch(`http://localhost:8080/producto/edit/${selectedProducto}?userId=${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
                     toast.current.show({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `El menú con ID ${selectedProducto} fue actualizado correctamente.`,
+                        detail: `El producto con ID ${selectedProducto} fue actualizado correctamente.`,
                         life: 3000,
                     });
                     onClose(); 
@@ -94,7 +94,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
                     toast.current.show({
                         severity: 'error',
                         summary: 'Error',
-                        detail: `No se pudo actualizar el menú con ID ${selectedProducto}.`,
+                        detail: `No se pudo actualizar el producto con ID ${selectedProducto}.`,
                         life: 3000,
                     });
                 }

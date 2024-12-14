@@ -2,10 +2,10 @@ import React, { useState, useRef } from 'react';
 import { Menubar } from 'primereact/menubar';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
-import AddProduct from './Addproduct';
+import Addproduct from './Addproduct';
 import Pedido from './Pedido';
-import DeleteProduct from './Deleteproduct';
-import UpdateProduct from './Updateproduct';
+import Deleteproduct from './Deleteproduct';
+import Updateproduct from './Updateproduct';
 
 export default function AdminMenu({ userData }) {
     const [displayAddDialog, setDisplayAddDialog] = useState(false);
@@ -64,49 +64,68 @@ export default function AdminMenu({ userData }) {
     ];
 
     return (
-        <div className="admin-container">
+        <div className="admin-container p-4">
             <Toast ref={toast} />
-            <Menubar model={items} />
+            {/* Menubar: Usando clases responsivas */}
+            <Menubar model={items} className="mb-4" />
 
-
+            {/* Diálogo de Agregar Producto */}
             <Dialog
                 header="Agregar producto"
                 visible={displayAddDialog}
                 onHide={closeDialog}
                 draggable={false}
+                style={{
+                    width: '100%',
+                    maxWidth: '90vw',  // El ancho máximo en pantallas pequeñas
+                }}
+                className="p-fluid"
             >
-
-                <AddProduct userId={userData.id} toast={toast} onClose={closeDialog} />
+                <Addproduct userId={userData.id} toast={toast} onClose={closeDialog} />
             </Dialog>
 
+            {/* Diálogo de Actualizar Producto */}
             <Dialog
                 header="Actualizar producto"
                 visible={displayUpdateDialog}
                 onHide={closeDialog}
                 draggable={false}
+                style={{
+                    width: '100%',
+                    maxWidth: '90vw',  // El ancho máximo en pantallas pequeñas
+                }}
+                className="p-fluid"
             >
-                <UpdateProduct userId={userData.id} toast={toast} onClose={closeDialog} />
+                <Updateproduct userId={userData.id} toast={toast} onClose={closeDialog} />
             </Dialog>
 
+            {/* Diálogo de Eliminar Producto */}
             <Dialog
                 header="Eliminar producto"
                 visible={displayDeleteDialog}
                 onHide={closeDialog}
                 draggable={false}
+                style={{
+                    width: '100%',
+                    maxWidth: '90vw',  // El ancho máximo en pantallas pequeñas
+                }}
+                className="p-fluid"
             >
-
-                <DeleteProduct userId={userData.id} toast={toast} onClose={closeDialog} />
+                <Deleteproduct userId={userData.id} toast={toast} onClose={closeDialog} />
             </Dialog>
 
-
+            {/* Diálogo de Pedidos */}
             <Dialog
                 header="Pedidos"
                 visible={displayOrdersDialog}
                 onHide={closeDialog}
-                style={{ width: '50vw' }}
                 draggable={false}
+                style={{
+                    width: '100%',
+                    maxWidth: '90vw',  // El ancho máximo en pantallas pequeñas
+                }}
+                className="p-fluid"
             >
-                { }
                 <Pedido userData={userData} />
             </Dialog>
         </div>
