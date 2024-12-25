@@ -245,7 +245,7 @@ function Home({ userData }) {
                     numScroll={1}
                     responsiveOptions={responsiveOptions}
                     circular
-                    style={{ marginLeft: '10px', marginRight: '10px', display:'grid', gap:'20px' }} // Aquí aplicamos márgenes al contenedor
+                    style={{ marginLeft: '10px', marginRight: '10px', display: 'grid', gap: '20px' }} // Aquí aplicamos márgenes al contenedor
                 />
             </div>
 
@@ -253,12 +253,15 @@ function Home({ userData }) {
                 header="Especificaciones"
                 visible={dialogVisible}
                 style={{
-                    width: '30vw',
+                    width: '60vw',  // Ancho relativo
                     padding: '15px',
                     borderRadius: '10px',
                     backgroundColor: '#f5f5f5',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    display: 'flex', // Flexbox para asegurar el centrado
+                    justifyContent: 'center', // Centrado horizontal
+                    alignItems: 'center', // Centrado vertical
                 }}
                 onHide={() => setDialogVisible(false)}
                 modal
@@ -273,6 +276,11 @@ function Home({ userData }) {
                         padding: '20px',
                         marginTop: '10px',
                         textAlign: 'center',
+                        display: 'flex', // Flexbox para asegurar el centrado
+                        flexDirection: 'column', // Alinea los elementos en columna
+                        justifyContent: 'center', // Asegura que los elementos estén centrados verticalmente
+                        alignItems: 'center', // Centrado horizontal
+                        gap: '15px', // Espacio entre los elementos
                     }}
                 >
                     <img
@@ -319,7 +327,7 @@ function Home({ userData }) {
                     <p
                         style={{
                             fontSize: '14px',
-                            color: '#888',
+                            color: '#555',
                             fontStyle: 'italic',
                             marginBottom: '20px',
                         }}
@@ -384,7 +392,7 @@ function Home({ userData }) {
                                 icon="pi pi-cart-plus"
                                 className="p-button-success p-mt-3 p-button-rounded"
                                 style={{
-                                    width: '70%',
+                                    width: 'auto',
                                     padding: '10px 0',
                                     fontSize: '14px',
                                     fontWeight: 'bold',
@@ -395,6 +403,7 @@ function Home({ userData }) {
                     )}
                 </div>
             </Dialog>
+
         </div>
     );
 }

@@ -1,7 +1,10 @@
-
+/* Tu archivo Profile.css */
 .profile-container {
-    margin-left: 20%; 
-    margin-right: 20%; 
+    display: flex;
+    justify-content: center; /* Alineación horizontal */
+    align-items: center; /* Alineación vertical */
+    height: auto; /* Asegura que ocupe toda la altura de la pantalla */
+    padding: auto; /* Asegura algo de espacio alrededor */
 }
 
 .profile-title {
@@ -13,25 +16,23 @@
 }
 
 .profile-card {
-    text-align: center;
     background-color: #a8a8a8;
-    max-width: 700px;
-    margin-top: 1rem; 
-    margin-left: 10%; 
-    margin-right: 10%; 
+    max-width: 700px; /* Asegura que el card no se expanda demasiado */
+    width: 100%; /* Hace que el card ocupe el 100% de su contenedor, pero limitado por max-width */
+    margin-top: 1rem;
+    padding: 2rem; /* Espaciado dentro del card */
+    border-radius: 10px; /* Bordes redondeados */
 }
 
 .profile-info {
-    text-align: center;
     display: grid;
-    margin-left: 10%; 
-    margin-right: 10%; 
+    grid-template-columns: repeat(1, 1fr); /* Por defecto 1 columna */
+    gap: 1rem; /* Espacio entre los elementos */
 }
 
 .profile-item {
     background: #e0e0e0;
     border-radius: 10px;
-    margin-top: 1rem; 
-    margin-left: 10%; 
-    margin-right: 10%;
+    padding: 1rem; /* Espaciado interno */
+    text-align: center;
 }

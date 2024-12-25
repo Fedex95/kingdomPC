@@ -3,10 +3,10 @@ import '../styles/Profile.css';
 
 export default function Profile({ userData }) {
     return (
-        <div className="profile-container p-4 sm:p-6 md:p-8 min-h-screen flex justify-center items-center">
+        <div className="profile-container">
             <div className="w-full max-w-4xl">
                 <h1 className="profile-title text-center text-3xl font-semibold mb-6">Datos personales</h1>
-                <Card className="profile-card p-6 shadow-lg rounded-lg">
+                <Card className="profile-card shadow-lg rounded-lg">
                     <div className="profile-info grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div className="profile-item">
                             <h3 className="text-lg font-medium">Nombres</h3>

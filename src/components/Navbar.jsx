@@ -18,7 +18,7 @@ function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu, use
                 alignItems: 'center',
                 padding: '1rem',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                backgroundColor: 'darkblue',
+                backgroundColor: 'purple',
                 color: 'white'
             }}
         >

@@ -108,9 +108,6 @@ function Register() {
   return (
     <div className="register">
       <Toast ref={toast} />
-      <div className="image-side">
-        <div className="overlay"></div>
-      </div>
       <div className="form-side">
         <form onSubmit={handleSubmit}>
           <h1>Ingrese sus datos personales</h1>
@@ -203,7 +200,7 @@ function Register() {
                 name="pass"
                 value={formData.pass}
                 onChange={handleChange}
-                className="w-full-pass"
+                className="register-w-full"
               />
             </div>
           </div>
