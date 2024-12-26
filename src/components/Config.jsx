@@ -1,2 +1,2 @@
-const BACKEND_URL = 'localhost'
+const BACKEND_URL = 'electromaster.com'
 export default BACKEND_URL;
