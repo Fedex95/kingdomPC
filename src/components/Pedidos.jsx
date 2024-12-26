@@ -10,7 +10,7 @@ export default function Pedidos({ userId }) {
     useEffect(() => {
         const fetchHistorial = async () => {
             try {
-                const response = await fetch(`http://${BACKEND_URL}/historial/${userId}`);
+                const response = await fetch(`http://${BACKEND_URL}:8080/historial/${userId}`);
                 if (!response.ok) {
                     throw new Error('Error al obtener el historial de pedidos');
                 }

@@ -70,7 +70,7 @@ function Register() {
     };
 
     try {
-      const response = await fetch(`http://${BACKEND_URL}/usuarios/createUsuario`, {
+      const response = await fetch(`http://${BACKEND_URL}:8080/usuarios/createUsuario`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

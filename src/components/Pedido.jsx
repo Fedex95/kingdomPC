@@ -8,7 +8,7 @@ export default function Pedido({ userData }) {
 
     useEffect(() => {
         if (userData && userData.id) {
-            fetch(`http://${BACKEND_URL}/historial/all?userId=${userData.id}`)
+            fetch(`http://${BACKEND_URL}:8080/historial/all?userId=${userData.id}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Error fetching orders');

@@ -32,7 +32,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
     ]
 
     useEffect(() => {
-        fetch(`http://${BACKEND_URL}/producto/find/all`)
+        fetch(`http://${BACKEND_URL}:8080/producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch(() => {

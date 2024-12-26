@@ -8,7 +8,7 @@ export default function DeleteProducto({ userId, toast, onClose }) {
     const [productos, setProductos] = useState([]); 
 
     useEffect(() => {
-        fetch(`http://${BACKEND_URL}/producto/find/all`)
+        fetch(`http://${BACKEND_URL}:8080/producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch((error) => {
@@ -22,7 +22,7 @@ export default function DeleteProducto({ userId, toast, onClose }) {
     }, []);
 
     const handleDelete = (productoId) => {
-        fetch(`http://${BACKEND_URL}/producto/delete/${productoId}?userId=${userId}`, {
+        fetch(`http://${BACKEND_URL}:8080/producto/delete/${productoId}?userId=${userId}`, {
             method: 'DELETE',
         })
             .then((response) => {

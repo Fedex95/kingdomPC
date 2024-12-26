@@ -29,7 +29,7 @@ function Login({ onLogin }) {
 
         try {
             const verifyResponse = await fetch(
-                `http://${BACKEND_URL}/usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
+                `http://${BACKEND_URL}:8080/usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
                 {
                     method: 'POST',
                     headers: {
@@ -39,7 +39,7 @@ function Login({ onLogin }) {
             );
 
             if (verifyResponse.status === 200) {
-                const usersResponse = await fetch(`http://${BACKEND_URL}/usuarios/get/all`, {
+                const usersResponse = await fetch(`http://${BACKEND_URL}:8080/usuarios/get/all`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

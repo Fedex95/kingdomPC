@@ -71,7 +71,7 @@ export default function ActualizarDatosUser({ userData }) {
                 [fieldName]: formData[fieldName]
             };
 
-            const response = await fetch(`http://${BACKEND_URL}/usuarios/editUsuario/${updatedUserData.id}`, {
+            const response = await fetch(`http://${BACKEND_URL}:8080/usuarios/editUsuario/${updatedUserData.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

@@ -51,7 +51,7 @@ const AddProduct = ({ userId, onClose }) => {
 
     try {
       const response = await fetch(
-        `http://${BACKEND_URL}/producto/newproducto?userId=${userId}`,
+        `http://${BACKEND_URL}:8080/producto/newproducto?userId=${userId}`,
         {
           method: 'POST',
           headers: {

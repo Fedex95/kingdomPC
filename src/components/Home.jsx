@@ -32,7 +32,7 @@ function Home({ userData }) {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch(`http://${BACKEND_URL}/producto/find/all`);
+                const response = await fetch(`http://${BACKEND_URL}:8080/producto/find/all`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
@@ -63,7 +63,7 @@ function Home({ userData }) {
 
     const checkIfItemInCart = async (productoId) => {
         try {
-            const response = await fetch(`http://${BACKEND_URL}/usuarios/get/all`);
+            const response = await fetch(`http://${BACKEND_URL}:8080/usuarios/get/all`);
             if (!response.ok) {
                 throw new Error('Error al verificar el carrito');
             }
@@ -105,7 +105,7 @@ function Home({ userData }) {
 
         try {
             const quantity = quantities[productoId] || 1;
-            const response = await fetch(`http://${BACKEND_URL}/cart/agregar`, {
+            const response = await fetch(`http://${BACKEND_URL}:8080/cart/agregar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
