@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Cart.css';
+import BACKEND_URL from './Config';
 
 function Cart({ userData }) {
     const [cartItems, setCartItems] = useState([]);
@@ -12,7 +13,7 @@ function Cart({ userData }) {
 
     const fetchCartItems = useCallback(async () => {
         try {
-            const response = await fetch(`http://localhost:8080/usuarios/get/all`);
+            const response = await fetch(`http://${BACKEND_URL}/usuarios/get/all`);
 
             if (!response.ok) {
                 throw new Error('Error al cargar el carrito');
@@ -51,7 +52,7 @@ function Cart({ userData }) {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/cart/eliminar/${cartId}/${itemId}`, {
+            const response = await fetch(`http://${BACKEND_URL}/cart/eliminar/${cartId}/${itemId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -104,7 +105,7 @@ function Cart({ userData }) {
                 return;
             }
 
-            const response = await fetch(`http://localhost:8080/cart/pagar/${userData.cart.id}`, {
+            const response = await fetch(`http://${BACKEND_URL}/cart/pagar/${userData.cart.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

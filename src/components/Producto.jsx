@@ -3,6 +3,7 @@ import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
+import BACKEND_URL from './Config';
 
 export default function Menu({ userData }) {
     const [productos, setProductos] = useState([]);
@@ -29,7 +30,7 @@ export default function Menu({ userData }) {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch('http://localhost:8080/producto/find/all');
+                const response = await fetch(`http://${BACKEND_URL}/producto/find/all`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
@@ -76,7 +77,7 @@ export default function Menu({ userData }) {
         if (!productItem || !quantity) return;
 
         try {
-            const response = await fetch('http://localhost:8080/cart/agregar', {
+            const response = await fetch(`http://${BACKEND_URL}/cart/agregar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

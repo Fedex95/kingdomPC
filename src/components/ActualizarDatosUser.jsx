@@ -7,6 +7,8 @@ import { Toast } from 'primereact/toast';
 import { useRef } from 'react';
 import '../styles/Settings.css';
 import { ConfirmDialog } from 'primereact/confirmdialog';
+import BACKEND_URL from './Config';
+
 
 export default function ActualizarDatosUser({ userData }) {
     const toast = useRef(null);
@@ -69,7 +71,7 @@ export default function ActualizarDatosUser({ userData }) {
                 [fieldName]: formData[fieldName]
             };
 
-            const response = await fetch(`http://localhost:8080/usuarios/editUsuario/${updatedUserData.id}`, {
+            const response = await fetch(`http://${BACKEND_URL}/usuarios/editUsuario/${updatedUserData.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

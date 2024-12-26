@@ -5,6 +5,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import '../styles/Register.css';
 import { Password } from 'primereact/password';
+import BACKEND_URL from './Config';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -69,7 +70,7 @@ function Register() {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/usuarios/createUsuario', {
+      const response = await fetch(`http://${BACKEND_URL}/usuarios/createUsuario`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

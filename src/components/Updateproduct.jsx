@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
+import BACKEND_URL from './Config';
 
 export default function UpdateProducto({ userId, toast, onClose }) {
     const [productos, setProductos] = useState([]); 
@@ -31,7 +32,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
     ]
 
     useEffect(() => {
-        fetch('http://localhost:8080/producto/find/all')
+        fetch(`http://${BACKEND_URL}/producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch(() => {

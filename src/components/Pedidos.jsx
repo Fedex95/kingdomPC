@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import BACKEND_URL from './Config';
 
 export default function Pedidos({ userId }) {
     const [pedidos, setPedidos] = useState([]);
@@ -9,7 +10,7 @@ export default function Pedidos({ userId }) {
     useEffect(() => {
         const fetchHistorial = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/historial/${userId}`);
+                const response = await fetch(`http://${BACKEND_URL}/historial/${userId}`);
                 if (!response.ok) {
                     throw new Error('Error al obtener el historial de pedidos');
                 }

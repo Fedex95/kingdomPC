@@ -5,6 +5,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import BACKEND_URL from './Config';
 
 const AddProduct = ({ userId, onClose }) => {
   const [nombre, setNombre] = useState('');
@@ -50,7 +51,7 @@ const AddProduct = ({ userId, onClose }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/producto/newproducto?userId=${userId}`,
+        `http://${BACKEND_URL}/producto/newproducto?userId=${userId}`,
         {
           method: 'POST',
           headers: {
@@ -66,7 +67,7 @@ const AddProduct = ({ userId, onClose }) => {
 
       toast.current.show({
         severity: 'success',
-        summary: 'Menú creado',
+        summary: 'Producto creado',
         detail: 'El producto se ha añadido exitosamente.',
         life: 3000,
       });

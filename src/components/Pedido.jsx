@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
+import BACKEND_URL from './Config';
 
 export default function Pedido({ userData }) {
     const [pedidos, setPedidos] = useState([]);
@@ -7,7 +8,7 @@ export default function Pedido({ userData }) {
 
     useEffect(() => {
         if (userData && userData.id) {
-            fetch(`http://localhost:8080/historial/all?userId=${userData.id}`)
+            fetch(`http://${BACKEND_URL}/historial/all?userId=${userData.id}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Error fetching orders');
