@@ -64,7 +64,8 @@ export default function AdminMenu({ userData }) {
     ];
 
     return (
-        <div className="admin-container p-4">
+        <div className="admin-container p-4"
+        >
             <Toast ref={toast} />
             {/* Menubar: Usando clases responsivas */}
             <Menubar model={items} className="mb-4" />

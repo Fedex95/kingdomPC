@@ -24,18 +24,16 @@ function Navbar({ cartItemsCount, handleNavigation, userMenuItems, userMenu, use
         >
 
             {/* Contenedor de la marca */}
-            <Link to="/home" style={{ fontSize: '1.5rem', color: 'white' }}>
+            <Link to="/home" style={{ fontSize: '1.2rem', color: 'white' }}>
                 Electro Master
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 {/*userData*/}
 
-                <div>
-                    <p>{userData?.nombre || ''}</p>
-                </div>
-                <div style={{ marginRight: '10px' }}>
-                    <p>{userData?.apellido || ''}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px', textAlign: 'center' }}>
+                    <p style={{ margin: 0, whiteSpace:'nowrap' }}>{userData?.nombre || ''}</p>
+                    <p style={{ margin: 0, whiteSpace:'nowrap' }}>{userData?.apellido || ''}</p>
                 </div>
 
 

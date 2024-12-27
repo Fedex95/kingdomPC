@@ -75,7 +75,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
             return;
         }
 
-        fetch(`http://localhost:8080/producto/edit/${selectedProducto}?userId=${userId}`, {
+        fetch(`http://${BACKEND_URL}:8080/producto/edit/${selectedProducto}?userId=${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

@@ -203,10 +203,13 @@ function Home({ userData }) {
                     {producto.descripcion}
                 </p>
                 <div className="menu-details flex justify-between mt-2">
-                    <span className="menu-price text-xl font-bold">${producto.precio.toFixed(2)}</span>
-                    <span className="menu-category text-sm text-gray-500">
+                    <span className="menu-category  text-black font-bold">
                         {categorias[producto.categoria] || producto.categoria}
                     </span>
+                    <div>
+                        <span className="menu-price text-xl font-bold"
+                            style={{ color: '#0000FF' }}>${producto.precio.toFixed(2)}</span>
+                    </div>
                 </div>
             </div>
         </Card>
@@ -254,8 +257,8 @@ function Home({ userData }) {
                 header="Especificaciones"
                 visible={dialogVisible}
                 style={{
-                    width: '60vw',  // Ancho relativo
-                    padding: '15px',
+                    width: '68vw',  // Ancho relativo
+                    padding: '10px',
                     borderRadius: '10px',
                     backgroundColor: '#f5f5f5',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -281,7 +284,6 @@ function Home({ userData }) {
                         flexDirection: 'column', // Alinea los elementos en columna
                         justifyContent: 'center', // Asegura que los elementos estén centrados verticalmente
                         alignItems: 'center', // Centrado horizontal
-                        gap: '15px', // Espacio entre los elementos
                     }}
                 >
                     <img
@@ -319,7 +321,7 @@ function Home({ userData }) {
                         style={{
                             fontSize: '18px',
                             fontWeight: 'bold',
-                            color: '#007BFF',
+                            color: '#000000',
                             marginBottom: '10px',
                         }}
                     >
@@ -329,15 +331,14 @@ function Home({ userData }) {
                         style={{
                             fontSize: '14px',
                             color: '#555',
-                            fontStyle: 'italic',
-                            marginBottom: '20px',
+                            marginBottom: '0.5px',
                         }}
                     >
                         {categorias[selectedProduct?.categoria]}
                     </p>
 
                     {selectedProduct && (
-                        <div>
+                        <div >
                             <p
                                 style={{
                                     fontSize: '14px',
@@ -358,12 +359,13 @@ function Home({ userData }) {
                             >
                                 <Button
                                     icon="pi pi-minus"
-                                    className="p-button-rounded p-button-outlined"
                                     style={{
-                                        width: '30px',
-                                        height: '30px',
+                                        width: '20px',
+                                        height: '20px',
                                         padding: '0',
                                         fontSize: '16px',
+                                        backgroundColor: '#9B4D96',
+                                        borderColor: '#9B4D96',
                                     }}
                                     onClick={() => handleQuantityChange(selectedProduct.id, quantities[selectedProduct.id] - 1)}
                                     disabled={quantities[selectedProduct.id] <= 1}
@@ -378,28 +380,34 @@ function Home({ userData }) {
                                 </span>
                                 <Button
                                     icon="pi pi-plus"
-                                    className="p-button-rounded p-button-outlined"
                                     style={{
-                                        width: '30px',
-                                        height: '30px',
+                                        width: '20px',
+                                        height: '20px',
                                         padding: '0',
                                         fontSize: '16px',
+                                        backgroundColor: '#9B4D96',
+                                        borderColor: '#9B4D96',
                                     }}
                                     onClick={() => handleQuantityChange(selectedProduct.id, quantities[selectedProduct.id] + 1)}
                                 />
                             </div>
-                            <Button
-                                label="Agregar al carrito"
-                                icon="pi pi-cart-plus"
-                                className="p-button-success p-mt-3 p-button-rounded"
-                                style={{
-                                    width: 'auto',
-                                    padding: '10px 0',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                }}
-                                onClick={() => addToCart(selectedProduct.id)}
-                            />
+                        
+                                <Button
+                                    label="Añadir"
+                                    icon="pi pi-shopping-cart"
+                                    style={{
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: 'auto',
+                                        padding: '10px 0',
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        backgroundColor: '#6A1B9A ',
+                                        borderColor: '#6A1B9A ',
+                                    }}
+                                    onClick={() => addToCart(selectedProduct.id)}
+                                />
+                            
                         </div>
                     )}
                 </div>

@@ -4,8 +4,9 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import '../styles/Register.css';
-import { Password } from 'primereact/password';
 import BACKEND_URL from './Config';
+import { Password } from 'primereact/password';
+
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -196,12 +197,13 @@ function Register() {
             </div>
             <div>
               <label htmlFor="pass">Contraseña</label>
-              <Password
+              <InputText
                 id="pass"
                 name="pass"
                 value={formData.pass}
                 onChange={handleChange}
-                className="register-w-full"
+                type='password'
+                className='register-w-full'
               />
             </div>
           </div>
