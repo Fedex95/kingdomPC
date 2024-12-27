@@ -10,6 +10,7 @@ import Pedidos from './components/Pedidos';
 import Producto from './components/Producto';
 import PerfilUsuario from './components/PerfilUsuario';
 import AdminView from './components/Adminview';
+import BACKEND_URL from './components/Config';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -33,7 +34,7 @@ function App() {
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('userData', JSON.stringify(data));
 
-    fetch(`http://localhost:8080/usuarios/${data.id}/admin`)
+    fetch(`http://${BACKEND_URL}:8080/usuarios/${data.id}/admin`)
       .then(response => response.json())
       .then(isAdminResponse => {
         setAdmin(isAdminResponse);
