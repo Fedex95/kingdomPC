@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("historial")
-@CrossOrigin("*")
 
 
 public class HistorialController {
