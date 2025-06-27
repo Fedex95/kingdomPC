@@ -13,6 +13,15 @@ jobs:
       - name: Checkout del repositorio
         uses: actions/checkout@v3
 
+      - name: Debug secreto EC2_SSH_KEY
+        run: |
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "ERROR: El secreto EC2_SSH_KEY está vacío o no existe"
+            exit 1
+          else
+            echo "El secreto EC2_SSH_KEY está cargado correctamente"
+          fi
+
       - name: Establecer conexión SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -24,7 +33,7 @@ jobs:
 
       - name: Desplegar en EC2 vía Docker Compose
         run: |
-          ssh ec2-user@18.190.253.17 << 'EOF'
+          ssh ec2-user@18.190.253.17 << EOF
             cd /home/ec2-user/deploy
             docker-compose down
             docker-compose build --no-cache
