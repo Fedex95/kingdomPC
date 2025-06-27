@@ -37,7 +37,7 @@ jobs:
         run: |
           ssh ec2-user@18.190.253.17 << EOF
             cd /home/ec2-user/deploy
-            docker-compose down
-            docker-compose build --no-cache
-            docker-compose up -d
+            sudo docker-compose down
+            sudo docker-compose build --no-cache
+            sudo docker-compose up -d
           EOF

@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   frontend:
     build: ./KPCFront/kingdomPC
@@ -15,9 +13,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/kgpc
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=valorant
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/kgpc
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: valorant
     depends_on:
       - db
     networks:
@@ -26,6 +24,7 @@ services:
   db:
     image: postgres:15
     container_name: postgres
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: valorant
@@ -38,6 +37,7 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
+    restart: always
     ports:
       - "8081:80"
     volumes:
