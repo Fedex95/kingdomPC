@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { Carousel } from 'primereact/carousel';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
-import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 
