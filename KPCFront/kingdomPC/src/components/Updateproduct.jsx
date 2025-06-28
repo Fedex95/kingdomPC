@@ -42,7 +42,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
                     life: 3000,
                 });
             });
-    }, []);
+    }, [toast]);
 
     const handleProductSelect = (productoId) => {
         const selected = productos.find((producto) => producto.id === productoId);
