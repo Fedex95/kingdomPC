@@ -142,6 +142,7 @@ function Home({ userData }) {
         setDialogVisible(true);
     };
 
+    /*
     const quantityTemplate = (productoId, currentQuantity, onQuantityChange) => (
         <div className="p-d-flex p-ai-center space-x-2">
             <Button
@@ -173,6 +174,7 @@ function Home({ userData }) {
             />
         </div>
     );
+    */
 
     const menuTemplate = (producto) => (
         <Card
