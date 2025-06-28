@@ -22,7 +22,7 @@ jobs:
         run: ssh-keyscan -H 18.119.113.12 >> ~/.ssh/known_hosts
 
       - name: Copiar archivos a la EC2
-        run: rsync -avz --exclude '.git' ./ ec2-user@18.190.253.17:/home/ec2-user/deploy
+        run: rsync -avz --exclude '.git' ./ ec2-user@18.119.113.12:/home/ec2-user/deploy
 
       - name: Desplegar en EC2 vía Docker Compose
         run: |
