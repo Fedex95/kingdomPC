@@ -19,14 +19,14 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 18.190.253.17 >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 18.119.113.12 >> ~/.ssh/known_hosts
 
       - name: Copiar archivos a la EC2
         run: rsync -avz --exclude '.git' ./ ec2-user@18.190.253.17:/home/ec2-user/deploy
 
       - name: Desplegar en EC2 vía Docker Compose
         run: |
-          ssh ec2-user@18.190.253.17 << EOF
+          ssh ec2-user@18.119.113.12 << EOF
             cd /home/ec2-user/deploy
             sudo docker-compose down
             sudo docker-compose build --no-cache
