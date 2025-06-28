@@ -1,4 +1,4 @@
-package com.tienda;
+package com.tienda.kpback.Test;
 
 import com.tienda.kpback.Entity.Producto;
 import com.tienda.kpback.Entity.UsuarioEnt;
