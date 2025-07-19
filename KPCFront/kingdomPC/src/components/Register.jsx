@@ -7,6 +7,7 @@ import '../styles/Register.css';
 import { Password } from 'primereact/password';
 
 function Register() {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -69,7 +70,7 @@ function Register() {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/usuarios/createUsuario', {
+      const response = await fetch(`${API_BASE_URL}/usuarios/createUsuario`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

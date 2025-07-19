@@ -12,7 +12,7 @@ function Login({ onLogin }) {
     const [pass, setPass] = useState('');
     const toast = useRef(null);
     const navigate = useNavigate();
-
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -28,7 +28,7 @@ function Login({ onLogin }) {
 
         try {
             const verifyResponse = await fetch(
-                `http://localhost:8080/usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
+                `${API_BASE_URL}/usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
                 {
                     method: 'POST',
                     headers: {
@@ -38,7 +38,7 @@ function Login({ onLogin }) {
             );
 
             if (verifyResponse.status === 200) {
-                const usersResponse = await fetch('http://localhost:8080/usuarios/get/all', {
+                const usersResponse = await fetch(`${API_BASE_URL}:8080/usuarios/get/all`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
