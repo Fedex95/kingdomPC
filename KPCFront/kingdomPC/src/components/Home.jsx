@@ -11,6 +11,7 @@ function Home({ userData }) {
     const [quantities, setQuantities] = useState({});
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [dialogVisible, setDialogVisible] = useState(false);
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     const categorias = [
         { label: 'Mouse', value: 'Mouse' },
@@ -30,7 +31,7 @@ function Home({ userData }) {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch('http://localhost:8080/producto/find/all');
+                const response = await fetch(`${API_BASE_URL}/producto/find/all`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
@@ -61,7 +62,7 @@ function Home({ userData }) {
 
     const checkIfItemInCart = async (productoId) => {
         try {
-            const response = await fetch(`http://localhost:8080/usuarios/get/all`);
+            const response = await fetch(`${API_BASE_URL}/usuarios/get/all`);
             if (!response.ok) {
                 throw new Error('Error al verificar el carrito');
             }
@@ -103,7 +104,7 @@ function Home({ userData }) {
 
         try {
             const quantity = quantities[productoId] || 1;
-            const response = await fetch('http://localhost:8080/cart/agregar', {
+            const response = await fetch(`${API_BASE_URL}/cart/agregar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

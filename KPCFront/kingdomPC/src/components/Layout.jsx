@@ -9,11 +9,12 @@ export default function Layout({ children, onLogout, cartItemsCount, userData })
     const userMenu = useRef(null);
     const navigate = useNavigate();
     const [admin, setAdmin] = useState(false);
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     useEffect(() => {
         async function verificarAdmin() {
             try {
-                const response = await fetch(`http://localhost:8080/usuarios/${userData?.id}/admin`);
+                const response = await fetch(`${API_BASE_URL}/usuarios/${userData?.id}/admin`);
                 if (!response.ok) {
                     throw new Error('Error al verificar si el usuario es admin');
                 }

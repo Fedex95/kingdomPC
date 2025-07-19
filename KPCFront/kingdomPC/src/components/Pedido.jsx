@@ -3,11 +3,11 @@ import { Card } from 'primereact/card';
 
 export default function Pedido({ userData }) {
     const [pedidos, setPedidos] = useState([]);
-
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     useEffect(() => {
         if (userData && userData.id) {
-            fetch(`http://localhost:8080/historial/all?userId=${userData.id}`)
+            fetch(`${API_BASE_URL}/historial/all?userId=${userData.id}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Error fetching orders');

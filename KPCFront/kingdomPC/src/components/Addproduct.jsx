@@ -13,6 +13,7 @@ const AddProduct = ({ userId, onClose }) => {
   const [imagenURL, setImagenURL] = useState('');
   const [categoria, setCategoria] = useState(null);
   const toast = React.useRef(null);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
   const category = [
     { label: 'Mouse', value: 'Mouse' },
@@ -50,7 +51,7 @@ const AddProduct = ({ userId, onClose }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/producto/newproducto?userId=${userId}`,
+        `${API_BASE_URL}/producto/newproducto?userId=${userId}`,
         {
           method: 'POST',
           headers: {

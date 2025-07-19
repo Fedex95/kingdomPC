@@ -9,10 +9,11 @@ function Cart({ userData }) {
     const [cartItems, setCartItems] = useState([]);
     const toast = useRef(null);
     const navigate = useNavigate();
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     const fetchCartItems = useCallback(async () => {
         try {
-            const response = await fetch(`http://localhost:8080/usuarios/get/all`);
+            const response = await fetch(`${API_BASE_URL}/usuarios/get/all`);
 
             if (!response.ok) {
                 throw new Error('Error al cargar el carrito');
@@ -51,7 +52,7 @@ function Cart({ userData }) {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/cart/eliminar/${cartId}/${itemId}`, {
+            const response = await fetch(`${API_BASE_URL}/cart/eliminar/${cartId}/${itemId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -104,7 +105,7 @@ function Cart({ userData }) {
                 return;
             }
 
-            const response = await fetch(`http://localhost:8080/cart/pagar/${userData.cart.id}`, {
+            const response = await fetch(`${API_BASE_URL}/cart/pagar/${userData.cart.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

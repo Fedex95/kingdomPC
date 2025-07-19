@@ -9,6 +9,7 @@ import '../styles/Settings.css';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
 export default function ActualizarDatosUser({ userData }) {
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const toast = useRef(null);
     const [loading, setLoading] = useState({});
     const [updatedUserData, setUpdatedUserData] = useState(userData);
@@ -69,7 +70,7 @@ export default function ActualizarDatosUser({ userData }) {
                 [fieldName]: formData[fieldName]
             };
 
-            const response = await fetch(`http://localhost:8080/usuarios/editUsuario/${updatedUserData.id}`, {
+            const response = await fetch(`${API_BASE_URL}/usuarios/editUsuario/${updatedUserData.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

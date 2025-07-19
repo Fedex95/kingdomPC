@@ -5,9 +5,10 @@ import { Column } from 'primereact/column';
 
 export default function DeleteProducto({ userId, toast, onClose }) {
     const [productos, setProductos] = useState([]); 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     useEffect(() => {
-        fetch('http://localhost:8080/producto/find/all')
+        fetch(`${API_BASE_URL}/producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch((error) => {
@@ -21,7 +22,7 @@ export default function DeleteProducto({ userId, toast, onClose }) {
     }, [toast]);
 
     const handleDelete = (productoId) => {
-        fetch(`http://localhost:8080/producto/delete/${productoId}?userId=${userId}`, {
+        fetch(`${API_BASE_URL}/producto/delete/${productoId}?userId=${userId}`, {
             method: 'DELETE',
         })
             .then((response) => {

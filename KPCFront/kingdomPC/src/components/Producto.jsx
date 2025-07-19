@@ -9,6 +9,7 @@ export default function Menu({ userData }) {
     const [quantities, setQuantities] = useState({});
     const [selectedProducto, setSelectedProducto] = useState(null);
     const [dialogVisible, setDialogVisible] = useState(false);
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const toast = useRef(null);
 
     const categories = [
@@ -29,7 +30,7 @@ export default function Menu({ userData }) {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch('http://localhost:8080/producto/find/all');
+                const response = await fetch(`${API_BASE_URL}/producto/find/all`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
@@ -76,7 +77,7 @@ export default function Menu({ userData }) {
         if (!productItem || !quantity) return;
 
         try {
-            const response = await fetch('http://localhost:8080/cart/agregar', {
+            const response = await fetch(`${API_BASE_URL}/cart/agregar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

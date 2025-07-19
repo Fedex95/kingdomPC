@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 export default function UpdateProducto({ userId, toast, onClose }) {
     const [productos, setProductos] = useState([]); 
     const [selectedProducto, setSelectedProducto] = useState(null); 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const [productData, setProductData] = useState({
         nombre: '',
         descripcion: '',
@@ -31,7 +32,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
     ]
 
     useEffect(() => {
-        fetch('http://localhost:8080/producto/find/all')
+        fetch(`${API_BASE_URL}/producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch(() => {
@@ -74,7 +75,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
             return;
         }
 
-        fetch(`http://localhost:8080/producto/edit/${selectedProducto}?userId=${userId}`, {
+        fetch(`${API_BASE_URL}/producto/edit/${selectedProducto}?userId=${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

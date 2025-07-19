@@ -5,11 +5,12 @@ import { Column } from 'primereact/column';
 export default function Pedidos({ userId }) {
     const [pedidos, setPedidos] = useState([]);
     const [error, setError] = useState(null);
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     useEffect(() => {
         const fetchHistorial = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/historial/${userId}`);
+                const response = await fetch(`${API_BASE_URL}/historial/${userId}`);
                 if (!response.ok) {
                     throw new Error('Error al obtener el historial de pedidos');
                 }
