@@ -1,4 +1,4 @@
-name: CI/CD Deployment
+name: CD
 
 on:
   push:
@@ -19,16 +19,45 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 18.119.113.12 >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 18.191.212.55 >> ~/.ssh/known_hosts
 
-      - name: Copiar archivos a la EC2
-        run: rsync -avz --exclude '.git' ./ ec2-user@18.119.113.12:/home/ec2-user/deploy
+      - name: Copiar archivos a la EC2 con rsync
+        run: |
+          echo "Iniciando transferencia de archivos a EC2..."
+          rsync -avz --exclude '.git' ./ ec2-user@18.191.212.55:/home/ec2-user/deploy || {
+            echo "Error al copiar archivos con rsync"
+            exit 1
+          }
 
       - name: Desplegar en EC2 vía Docker Compose
         run: |
-          ssh ec2-user@18.119.113.12 << EOF
+          echo "Ejecutando pasos de despliegue en EC2..."
+
+          ssh ec2-user@18.191.212.55 << 'EOF'
+            set -euo pipefail
+
+            echo "Ingresando a la carpeta del proyecto"
             cd /home/ec2-user/deploy
-            sudo docker-compose down
-            sudo docker-compose build --no-cache
-            sudo docker-compose up -d
+
+            echo "Limpiando recursos Docker para liberar espacio..."
+            docker system prune -af || echo "No se pudo limpiar Docker"
+            docker builder prune -af || echo "No se pudo limpiar Builder"
+
+            echo "Deteniendo contenedores existentes"
+            docker-compose down || echo "No había contenedores activos"
+
+            echo "Construyendo contenedores (build)..."
+            export DOCKER_BUILDKIT=1
+            docker-compose build --no-cache --progress=plain || {
+              echo 'Falló la construcción de contenedores'
+              exit 1
+            }
+
+            echo "Iniciando contenedores"
+            docker-compose up -d || {
+              echo 'Falló al iniciar los contenedores'
+              exit 1
+            }
+
+            echo "Despliegue completado correctamente"
           EOF
