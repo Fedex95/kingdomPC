@@ -19,7 +19,7 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 3.133.122.12 >> ~/.ssh/known_hosts  # Verifica esta IP
+        run: ssh-keyscan -H 3.133.122.12 >> ~/.ssh/known_hosts
 
       - name: Copiar archivos a la EC2 con rsync
         run: |
@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "Instalando SonarQube en EC2..."
 
-          ssh ec2-user@3.133.122.12 << 'EOF'
+          ssh ec2-user@3.133.122.12 << EOF
             set -euo pipefail
 
             # Instalar Java 17 (requisito)
@@ -52,7 +52,7 @@ jobs:
             sudo chown -R sonar:sonar /opt/sonarqube
 
             # Configurar para usar PostgreSQL
-            sudo tee /opt/sonarqube/conf/sonar.properties > /dev/null <<EOL
+            sudo tee /opt/sonarqube/conf/sonar.properties > /dev/null << EOL
 sonar.jdbc.username=postgres
 sonar.jdbc.password=${POSTGRES_PASSWORD}
 sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonar
@@ -73,7 +73,7 @@ EOL
         run: |
           echo "Ejecutando despliegue de aplicación..."
 
-          ssh ec2-user@3.133.122.12 << 'EOF'
+          ssh ec2-user@3.133.122.12 << EOF
             set -euo pipefail
 
             cd /home/ec2-user/deploy
