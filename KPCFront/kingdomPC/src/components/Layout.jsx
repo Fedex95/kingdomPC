@@ -40,7 +40,7 @@ export default function Layout({ children, onLogout, cartItemsCount, userData })
         
         ...(admin ? [
             {
-                label: 'Agregar/Editar productos',
+                label: 'Agregar/Editar productos ',
                 icon: 'pi pi-cog',
                 command: () => navigate('/admin'),
             },
