@@ -14,12 +14,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Establecer conexión SSH
-        uses: actions/ssh-agent@v0.9.0
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 3.133.122.12 >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 3.133.122.12 >> ~/.ssh/known_hosts  # Verifica esta IP
 
       - name: Copiar archivos a la EC2 con rsync
         run: |
