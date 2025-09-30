@@ -14,50 +14,84 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Establecer conexión SSH
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: actions/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 18.191.212.55 >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 3.133.122.12 >> ~/.ssh/known_hosts
 
       - name: Copiar archivos a la EC2 con rsync
         run: |
           echo "Iniciando transferencia de archivos a EC2..."
-          rsync -avz --exclude '.git' ./ ec2-user@18.191.212.55:/home/ec2-user/deploy || {
+          rsync -avz --exclude '.git' ./ ec2-user@3.133.122.12:/home/ec2-user/deploy || {
             echo "Error al copiar archivos con rsync"
             exit 1
           }
 
-      - name: Desplegar en EC2 vía Docker Compose
+      - name: Instalar SonarQube en EC2
         run: |
-          echo "Ejecutando pasos de despliegue en EC2..."
+          echo "Instalando SonarQube en EC2..."
 
-          ssh ec2-user@18.191.212.55 << 'EOF'
+          ssh ec2-user@3.133.122.12 << 'EOF'
             set -euo pipefail
 
-            echo "Ingresando a la carpeta del proyecto"
+            # Instalar Java 17 (requisito)
+            echo "Instalando Java 17..."
+            sudo yum update -y
+            sudo yum install -y java-17-amazon-corretto-headless
+
+            # Crear usuario sonar
+            sudo useradd sonar || echo "Usuario ya existe"
+
+            # Descargar SonarQube
+            cd /home/ec2-user
+            wget -q https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.3.0.82913.zip || echo "Ya descargado"
+            unzip -qo sonarqube-10.3.0.82913.zip || echo "Ya descomprimido"
+            sudo mv sonarqube-10.3.0.82913 /opt/sonarqube || echo "Ya movido"
+            sudo chown -R sonar:sonar /opt/sonarqube
+
+            # Configurar para usar PostgreSQL
+            sudo tee /opt/sonarqube/conf/sonar.properties > /dev/null <<EOL
+sonar.jdbc.username=postgres
+sonar.jdbc.password=${POSTGRES_PASSWORD}
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonar
+sonar.web.host=0.0.0.0
+sonar.web.port=9000
+EOL
+
+            # Crear BD sonar en PostgreSQL
+            PGPASSWORD=${POSTGRES_PASSWORD} psql -h localhost -U postgres -d kgpc -c "CREATE DATABASE sonar;" 2>/dev/null || echo "BD ya existe"
+
+            # Iniciar SonarQube
+            sudo -u sonar /opt/sonarqube/bin/linux-x86-64/sonar.sh start || echo "Ya iniciado"
+
+            echo "SonarQube listo en http://localhost:9000"
+          EOF
+
+      - name: Desplegar aplicación en EC2 vía Docker Compose
+        run: |
+          echo "Ejecutando despliegue de aplicación..."
+
+          ssh ec2-user@3.133.122.12 << 'EOF'
+            set -euo pipefail
+
             cd /home/ec2-user/deploy
 
-            echo "Limpiando recursos Docker para liberar espacio..."
-            docker system prune -af || echo "No se pudo limpiar Docker"
-            docker builder prune -af || echo "No se pudo limpiar Builder"
+            echo "Limpiando Docker..."
+            docker system prune -af || echo "No se pudo limpiar"
 
-            echo "Deteniendo contenedores existentes"
-            docker-compose down || echo "No había contenedores activos"
-
-            echo "Construyendo contenedores (build)..."
+            echo "Desplegando aplicación..."
+            docker-compose down || echo "No había contenedores"
             export DOCKER_BUILDKIT=1
-            docker-compose build --no-cache --progress=plain || {
-              echo 'Falló la construcción de contenedores'
+            docker-compose build --no-cache || {
+              echo 'Falló build'
               exit 1
             }
-
-            echo "Iniciando contenedores"
             docker-compose up -d || {
-              echo 'Falló al iniciar los contenedores'
+              echo 'Falló startup'
               exit 1
             }
 
-            echo "Despliegue completado correctamente"
+            echo "Aplicación desplegada"
           EOF
