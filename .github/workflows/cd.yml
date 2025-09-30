@@ -52,13 +52,11 @@ jobs:
             sudo chown -R sonar:sonar /opt/sonarqube
 
             # Configurar para usar PostgreSQL
-            sudo tee /opt/sonarqube/conf/sonar.properties > /dev/null << EOL
-sonar.jdbc.username=postgres
-sonar.jdbc.password=${POSTGRES_PASSWORD}
-sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonar
-sonar.web.host=0.0.0.0
-sonar.web.port=9000
-EOL
+            echo "sonar.jdbc.username=postgres" | sudo tee /opt/sonarqube/conf/sonar.properties > /dev/null
+            echo "sonar.jdbc.password=${POSTGRES_PASSWORD}" | sudo tee -a /opt/sonarqube/conf/sonar.properties > /dev/null
+            echo "sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonar" | sudo tee -a /opt/sonarqube/conf/sonar.properties > /dev/null
+            echo "sonar.web.host=0.0.0.0" | sudo tee -a /opt/sonarqube/conf/sonar.properties > /dev/null
+            echo "sonar.web.port=9000" | sudo tee -a /opt/sonarqube/conf/sonar.properties > /dev/null
 
             # Crear BD sonar en PostgreSQL
             PGPASSWORD=${POSTGRES_PASSWORD} psql -h localhost -U postgres -d kgpc -c "CREATE DATABASE sonar;" 2>/dev/null || echo "BD ya existe"
