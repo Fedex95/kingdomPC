@@ -7,12 +7,13 @@ import { Toast } from 'primereact/toast';
 import { Link } from 'react-router-dom';
 import '../styles/Login.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 function Login({ onLogin }) {
     const [usuario, setUsuario] = useState('');
     const [pass, setPass] = useState('');
     const toast = useRef(null);
     const navigate = useNavigate();
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const handleLogin = async (e) => {
         e.preventDefault();
 

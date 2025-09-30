@@ -5,11 +5,13 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 export default function Layout({ children, onLogout, cartItemsCount, userData }) {
     const userMenu = useRef(null);
     const navigate = useNavigate();
     const [admin, setAdmin] = useState(false);
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+    
 
     useEffect(() => {
         async function verificarAdmin() {

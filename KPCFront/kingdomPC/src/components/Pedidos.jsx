@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
+
 export default function Pedidos({ userId }) {
     const [pedidos, setPedidos] = useState([]);
     const [error, setError] = useState(null);
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     useEffect(() => {
         const fetchHistorial = async () => {

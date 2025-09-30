@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
 
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 export default function Pedido({ userData }) {
     const [pedidos, setPedidos] = useState([]);
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     useEffect(() => {
         if (userData && userData.id) {

@@ -4,10 +4,12 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 export default function UpdateProducto({ userId, toast, onClose }) {
     const [productos, setProductos] = useState([]); 
     const [selectedProducto, setSelectedProducto] = useState(null); 
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const [productData, setProductData] = useState({
         nombre: '',
         descripcion: '',

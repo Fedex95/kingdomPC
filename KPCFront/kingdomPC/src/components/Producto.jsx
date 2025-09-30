@@ -4,12 +4,13 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 export default function Menu({ userData }) {
     const [productos, setProductos] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [selectedProducto, setSelectedProducto] = useState(null);
     const [dialogVisible, setDialogVisible] = useState(false);
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const toast = useRef(null);
 
     const categories = [

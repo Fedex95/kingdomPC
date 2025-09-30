@@ -3,9 +3,12 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 export default function DeleteProducto({ userId, toast, onClose }) {
     const [productos, setProductos] = useState([]); 
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 
     useEffect(() => {
         fetch(`${API_BASE_URL}/producto/find/all`)

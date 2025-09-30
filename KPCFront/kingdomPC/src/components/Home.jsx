@@ -5,14 +5,16 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 function Home({ userData }) {
     const toast = useRef(null);
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [dialogVisible, setDialogVisible] = useState(false);
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
-
+    
     const categorias = [
         { label: 'Mouse', value: 'Mouse' },
         { label: 'Teclado', value: 'Teclado' },

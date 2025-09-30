@@ -6,6 +6,8 @@ import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 const AddProduct = ({ userId, onClose }) => {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -13,7 +15,6 @@ const AddProduct = ({ userId, onClose }) => {
   const [imagenURL, setImagenURL] = useState('');
   const [categoria, setCategoria] = useState(null);
   const toast = React.useRef(null);
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
   const category = [
     { label: 'Mouse', value: 'Mouse' },

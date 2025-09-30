@@ -5,11 +5,13 @@ import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Cart.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
+
 function Cart({ userData }) {
     const [cartItems, setCartItems] = useState([]);
     const toast = useRef(null);
     const navigate = useNavigate();
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
 
     const fetchCartItems = useCallback(async () => {
         try {

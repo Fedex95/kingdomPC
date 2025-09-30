@@ -6,8 +6,10 @@ import { Toast } from 'primereact/toast';
 import '../styles/Register.css';
 import { Password } from 'primereact/password';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
+
 function Register() {
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',

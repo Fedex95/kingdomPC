@@ -8,8 +8,9 @@ import { useRef } from 'react';
 import '../styles/Settings.css';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
 export default function ActualizarDatosUser({ userData }) {
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
     const toast = useRef(null);
     const [loading, setLoading] = useState({});
     const [updatedUserData, setUpdatedUserData] = useState(userData);
