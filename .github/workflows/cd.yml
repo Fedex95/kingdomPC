@@ -81,27 +81,17 @@ jobs:
 
       - name: Desplegar aplicación en EC2 vía Docker Compose
         run: |
-          echo "Ejecutando despliegue de aplicación..."
-
+          echo "Desplegando aplicación..."
           ssh ec2-user@18.191.22.254 << EOF
-            set -euo pipefail
-
             cd /home/ec2-user/deploy
-
-            echo "Limpiando Docker..."
-            docker system prune -af || echo "No se pudo limpiar"
-
-            echo "Desplegando aplicación..."
-            docker-compose down || echo "No había contenedores"
-            export DOCKER_BUILDKIT=1
-            docker-compose build --no-cache || {
-              echo 'Falló build'
+            docker-compose up -d
+            sleep 10  # Esperar que inicie
+            docker logs backend > backend_logs.txt
+            if docker ps | grep -q backend; then
+              echo "Backend corriendo"
+            else
+              echo "Backend falló - logs:"
+              cat backend_logs.txt
               exit 1
-            }
-            docker-compose up -d || {
-              echo 'Falló startup'
-              exit 1
-            }
-
-            echo "Aplicación desplegada"
+            fi
           EOF
