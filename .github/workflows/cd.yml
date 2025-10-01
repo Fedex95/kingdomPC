@@ -9,6 +9,9 @@ jobs:
   cleanup: 
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+
       - name: Establecer conexión SSH
         uses: shimataro/ssh-key-action@v2  
         with:
@@ -18,14 +21,23 @@ jobs:
       - name: Añadir EC2 a known_hosts  
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -p 22 -H 3.137.222.194 >> ~/.ssh/known_hosts
+          ssh-keyscan -p 22 -H 3.149.0.158 >> ~/.ssh/known_hosts
 
       - name: Limpiar espacio en EC2
         run: |
           echo "Limpiando espacio en EC2..."
-          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.137.222.194 << EOF
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.149.0.158 << EOF
             echo "Espacio antes de limpiar:"
             df -h /
+            
+            # Copiar docker-compose.yml para down
+            mkdir -p /home/ec2-user/deploy
+            scp -o StrictHostKeyChecking=no docker-compose.yml ec2-user@3.149.0.158:/home/ec2-user/deploy/ || echo "Ya copiado"
+            
+            cd /home/ec2-user/deploy
+            
+            # Parar contenedores antiguos
+            docker-compose down || echo "No había contenedores antiguos"
             
             # Parar todos los contenedores corriendo
             docker stop $(docker ps -q) 2>/dev/null || echo "No había contenedores corriendo"
@@ -47,9 +59,6 @@ jobs:
     needs: cleanup 
 
     steps:
-      - name: Checkout del repositorio
-        uses: actions/checkout@v3
-
       - name: Establecer conexión SSH
         uses: shimataro/ssh-key-action@v2  
         with:
@@ -59,12 +68,12 @@ jobs:
       - name: Añadir EC2 a known_hosts  
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -p 22 -H 3.137.222.194 >> ~/.ssh/known_hosts
+          ssh-keyscan -p 22 -H 3.149.0.158 >> ~/.ssh/known_hosts
 
       - name: Copiar archivos a la EC2 con rsync
         run: |
           echo "Iniciando transferencia de archivos a EC2..."
-          rsync -avz --exclude '.git' ./ ec2-user@3.137.222.194:/home/ec2-user/deploy || {
+          rsync -avz --exclude '.git' ./ ec2-user@3.149.0.158:/home/ec2-user/deploy || {
             echo "Error al copiar archivos con rsync"
             exit 1
           }
@@ -73,7 +82,7 @@ jobs:
         run: |
           echo "Verificando instalación de SonarQube..."
           
-          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.137.222.194 << EOF
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.149.0.158 << EOF
             set -euo pipefail
             
             # Verificar si ya está instalado 
@@ -127,7 +136,7 @@ jobs:
         run: |
           echo "Ejecutando despliegue de aplicación:"
 
-          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.137.222.194 << EOF
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.149.0.158 << EOF
             set -euo pipefail
 
             cd /home/ec2-user/deploy
@@ -136,7 +145,7 @@ jobs:
             export DOCKER_BUILDKIT=1
             export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" 
             
-            # REBUILD 
+            # REBUILD LIMPIO
             docker-compose build --no-cache
             
             docker-compose up -d || {
