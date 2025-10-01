@@ -21,7 +21,7 @@ jobs:
       - name: Limpiar espacio en EC2
         run: |
           echo "Limpiando espacio en EC2..."
-          ssh ec2-user@3.137.222.194 << EOF
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@3.137.222.194 << EOF
             echo "Espacio antes de limpiar:"
             df -h /
             
@@ -54,6 +54,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           known_hosts: unnecessary
 
+      - name: Añadir EC2 a known_hosts  
+        run: ssh-keyscan -H 3.137.222.194 >> ~/.ssh/known_hosts
+
       - name: Copiar archivos a la EC2 con rsync
         run: |
           echo "Iniciando transferencia de archivos a EC2..."
@@ -66,7 +69,7 @@ jobs:
         run: |
           echo "Verificando instalación de SonarQube..."
           
-          ssh ec2-user@3.137.222.194 << EOF
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@3.137.222.194 << EOF
             set -euo pipefail
             
             # Verificar si ya está instalado 
@@ -89,7 +92,7 @@ jobs:
             # Crear usuario sonar
             sudo useradd sonar || echo "Usuario ya existe"
             
-            # Descargar SonarQube 
+            # Descargar SonarQube (solo si no existe)
             cd /home/ec2-user
             if [ ! -f sonarqube-10.3.0.82913.zip ]; then
               wget -q https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.3.0.82913.zip
@@ -120,14 +123,14 @@ jobs:
         run: |
           echo "Ejecutando despliegue de aplicación:"
 
-          ssh ec2-user@3.137.222.194 << EOF
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@3.137.222.194 << EOF
             set -euo pipefail
 
             cd /home/ec2-user/deploy
 
             echo "Desplegando aplicación..."
             export DOCKER_BUILDKIT=1
-            POSTGRES_PASSWORD=${POSTGRES_PASSWORD} docker-compose up -d || {  
+            POSTGRES_PASSWORD=${POSTGRES_PASSWORD} docker-compose up -d || {
               echo 'Falló startup'
               exit 1
             }
