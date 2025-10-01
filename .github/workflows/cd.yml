@@ -122,7 +122,8 @@ jobs:
 
             cd /home/ec2-user/deploy
 
-            echo "Desplegando aplicación"
+            echo "Desplegando aplicación..."
+            export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}  
             export DOCKER_BUILDKIT=1
             docker-compose build --no-cache || {
               echo 'Falló build'
