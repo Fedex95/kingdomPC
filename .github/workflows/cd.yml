@@ -88,11 +88,12 @@ jobs:
 
             cd /home/ec2-user/deploy
 
-            echo "Limpiando Docker..."
-            docker system prune -af || echo "No se pudo limpiar"
+            echo "Limpiando Docker (conservando volúmenes)..."
+            docker-compose down || echo "No había contenedores"
+            docker system prune -f || echo "No se pudo limpiar"
+            docker image prune -f || echo "No se pudo limpiar imágenes"
 
             echo "Desplegando aplicación..."
-            docker-compose down || echo "No había contenedores"
             export DOCKER_BUILDKIT=1
             docker-compose build --no-cache || {
               echo 'Falló build'
@@ -102,6 +103,13 @@ jobs:
               echo 'Falló startup'
               exit 1
             }
+
+            echo "Verificando contenedores..."
+            docker ps
+            echo "Logs del backend:"
+            docker logs backend | tail -20
+            echo "Logs del frontend:"
+            docker logs frontend | tail -10
 
             echo "Aplicación desplegada"
           EOF
