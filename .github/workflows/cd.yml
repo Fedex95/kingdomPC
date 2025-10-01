@@ -28,12 +28,7 @@ jobs:
             echo "Espacio antes de limpiar:"
             df -h /
             
-            # Limpiar Docker
-            docker system prune -af || echo "No se pudo limpiar Docker"
-            docker volume prune -f || echo "No se pudo limpiar volúmenes"
-            docker image prune -af || echo "No se pudo limpiar imágenes"
-            
-            # Limpiar archivos temporales
+            # Limpiar archivos temporales 
             sudo yum clean all || echo "No se pudo limpiar yum"
             sudo rm -rf /tmp/* || echo "No se pudo limpiar tmp"
             
@@ -107,6 +102,15 @@ jobs:
             set -euo pipefail
 
             cd /home/ec2-user/deploy
+
+            echo "Limpiando cache de Docker completamente..."
+            docker system prune -af || echo "No se pudo limpiar system"
+            docker builder prune -af || echo "No se pudo limpiar builder"
+            docker volume prune -f || echo "No se pudo limpiar volúmenes"
+            docker image prune -af || echo "No se pudo limpiar imágenes"
+
+            echo "Verificando espacio en Docker:"
+            docker system df
 
             echo "Desplegando aplicación..."
             export DOCKER_BUILDKIT=1
