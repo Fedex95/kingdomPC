@@ -15,6 +15,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           known_hosts: unnecessary
 
+      - name: Añadir EC2 a known_hosts  
+        run: ssh-keyscan -H 3.137.222.194 >> ~/.ssh/known_hosts
+
       - name: Limpiar espacio en EC2
         run: |
           echo "Limpiando espacio en EC2..."
