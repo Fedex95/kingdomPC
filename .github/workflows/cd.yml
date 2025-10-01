@@ -136,8 +136,8 @@ jobs:
             export DOCKER_BUILDKIT=1
             export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" 
             
-            echo "Variables de entorno configuradas:"
-            echo "POSTGRES_PASSWORD está configurado: \${POSTGRES_PASSWORD:+SI}"
+            # REBUILD 
+            docker-compose build --no-cache
             
             docker-compose up -d || {
               echo 'Falló startup'
@@ -154,4 +154,4 @@ jobs:
             echo "Aplicación desplegada"
           EOF
         env:
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}  # AGREGAR ESTO
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
