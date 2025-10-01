@@ -53,6 +53,8 @@ jobs:
             df -h /
             docker system df
           EOF
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }} 
 
   deploy:  
     runs-on: ubuntu-latest
