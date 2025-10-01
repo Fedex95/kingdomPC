@@ -16,12 +16,14 @@ jobs:
           known_hosts: unnecessary
 
       - name: Añadir EC2 a known_hosts  
-        run: ssh-keyscan -H 3.137.222.194 >> ~/.ssh/known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22 -H 3.137.222.194 >> ~/.ssh/known_hosts
 
       - name: Limpiar espacio en EC2
         run: |
           echo "Limpiando espacio en EC2..."
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@3.137.222.194 << EOF
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.137.222.194 << EOF
             echo "Espacio antes de limpiar:"
             df -h /
             
@@ -55,12 +57,14 @@ jobs:
           known_hosts: unnecessary
 
       - name: Añadir EC2 a known_hosts  
-        run: ssh-keyscan -H 3.137.222.194 >> ~/.ssh/known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22 -H 3.137.222.194 >> ~/.ssh/known_hosts
 
       - name: Copiar archivos a la EC2 con rsync
         run: |
           echo "Iniciando transferencia de archivos a EC2..."
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --exclude '.git' ./ ec2-user@3.137.222.194:/home/ec2-user/deploy || {
+          rsync -avz --exclude '.git' ./ ec2-user@3.137.222.194:/home/ec2-user/deploy || {
             echo "Error al copiar archivos con rsync"
             exit 1
           }
@@ -69,7 +73,7 @@ jobs:
         run: |
           echo "Verificando instalación de SonarQube..."
           
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@3.137.222.194 << EOF
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.137.222.194 << EOF
             set -euo pipefail
             
             # Verificar si ya está instalado 
@@ -123,7 +127,7 @@ jobs:
         run: |
           echo "Ejecutando despliegue de aplicación:"
 
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.137.222.194 << EOF
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@3.137.222.194 << EOF
             set -euo pipefail
 
             cd /home/ec2-user/deploy
