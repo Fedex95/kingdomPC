@@ -19,24 +19,36 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 3.133.122.12 >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 18.191.22.254 >> ~/.ssh/known_hosts
 
       - name: Copiar archivos a la EC2 con rsync
         run: |
           echo "Iniciando transferencia de archivos a EC2..."
-          rsync -avz --exclude '.git' ./ ec2-user@3.133.122.12:/home/ec2-user/deploy || {
+          rsync -avz --exclude '.git' ./ ec2-user@18.191.22.254:/home/ec2-user/deploy || {
             echo "Error al copiar archivos con rsync"
             exit 1
           }
+
+      - name: Verificar SonarQube
+        run: |
+          echo "Verificando estado de SonarQube..."
+          ssh ec2-user@18.191.22.254 << EOF
+            if sudo -u sonar /opt/sonarqube/bin/linux-x86-64/sonar.sh status 2>/dev/null | grep -q "SonarQube is running"; then
+              echo "SonarQube ya está corriendo, omitiendo instalación"
+              exit 0
+            else
+              echo "SonarQube no está corriendo, procediendo con instalación"
+            fi
+          EOF
 
       - name: Instalar SonarQube en EC2
         run: |
           echo "Instalando SonarQube en EC2..."
 
-          ssh ec2-user@3.133.122.12 << EOF
+          ssh ec2-user@18.191.22.254 << EOF
             set -euo pipefail
 
-            # Instalar Java 17 (requisito)
+            # Instalar Java 17
             echo "Instalando Java 17..."
             sudo yum update -y
             sudo yum install -y java-17-amazon-corretto-headless
@@ -71,7 +83,7 @@ jobs:
         run: |
           echo "Ejecutando despliegue de aplicación..."
 
-          ssh ec2-user@3.133.122.12 << EOF
+          ssh ec2-user@18.191.22.254 << EOF
             set -euo pipefail
 
             cd /home/ec2-user/deploy
