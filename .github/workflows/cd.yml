@@ -10,12 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Establecer conexión SSH
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: shimataro/ssh-key-action@v2  
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 3.137.222.194 >> ~/.ssh/known_hosts
+          key: ${{ secrets.EC2_SSH_KEY }}
+          known_hosts: unnecessary
 
       - name: Limpiar espacio en EC2
         run: |
@@ -48,12 +46,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Establecer conexión SSH
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: shimataro/ssh-key-action@v2  
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      - name: Añadir EC2 a known_hosts
-        run: ssh-keyscan -H 3.137.222.194 >> ~/.ssh/known_hosts
+          key: ${{ secrets.EC2_SSH_KEY }}
+          known_hosts: unnecessary
 
       - name: Copiar archivos a la EC2 con rsync
         run: |
@@ -90,7 +86,7 @@ jobs:
             # Crear usuario sonar
             sudo useradd sonar || echo "Usuario ya existe"
             
-            # Descargar SonarQube (solo si no existe)
+            # Descargar SonarQube 
             cd /home/ec2-user
             if [ ! -f sonarqube-10.3.0.82913.zip ]; then
               wget -q https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.3.0.82913.zip
@@ -127,13 +123,8 @@ jobs:
             cd /home/ec2-user/deploy
 
             echo "Desplegando aplicación..."
-            export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}  
             export DOCKER_BUILDKIT=1
-            docker-compose build --no-cache || {
-              echo 'Falló build'
-              exit 1
-            }
-            docker-compose up -d || {
+            POSTGRES_PASSWORD=${POSTGRES_PASSWORD} docker-compose up -d || {  
               echo 'Falló startup'
               exit 1
             }
