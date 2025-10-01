@@ -21,6 +21,26 @@ jobs:
       - name: Añadir EC2 a known_hosts
         run: ssh-keyscan -H 18.191.22.254 >> ~/.ssh/known_hosts
 
+      - name: Limpiar espacio en EC2  
+        run: |
+          echo "Limpiando espacio en EC2..."
+          ssh ec2-user@18.191.22.254 << EOF
+            echo "Espacio antes de limpiar:"
+            df -h /
+            
+            # Limpiar Docker
+            docker system prune -af || echo "No se pudo limpiar Docker"
+            docker volume prune -f || echo "No se pudo limpiar volúmenes"
+            docker image prune -af || echo "No se pudo limpiar imágenes"
+            
+            # Limpiar archivos temporales
+            sudo yum clean all || echo "No se pudo limpiar yum"
+            sudo rm -rf /tmp/* || echo "No se pudo limpiar tmp"
+            
+            echo "Espacio después de limpiar:"
+            df -h /
+          EOF
+
       - name: Copiar archivos a la EC2 con rsync
         run: |
           echo "Iniciando transferencia de archivos a EC2..."
@@ -87,11 +107,6 @@ jobs:
             set -euo pipefail
 
             cd /home/ec2-user/deploy
-
-            echo "Limpiando Docker (conservando volúmenes)..."
-            docker-compose down || echo "No había contenedores"
-            docker system prune -f || echo "No se pudo limpiar"
-            docker image prune -f || echo "No se pudo limpiar imágenes"
 
             echo "Desplegando aplicación..."
             export DOCKER_BUILDKIT=1
