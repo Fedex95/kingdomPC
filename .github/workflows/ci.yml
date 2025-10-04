@@ -3,15 +3,18 @@ name: CI
 on:
   push:
     branches:
-      - deploy
+      - master    
+      - front2.0 
   pull_request:
     branches:
-      - deploy
+      - master
+      - front2.0
 
 jobs:
   build-backend:
     name: Build & Test Backend
     runs-on: ubuntu-latest
+    if: contains(github.ref, 'master')  
 
     steps:
       - name: Checkout code
@@ -37,7 +40,7 @@ jobs:
   build-frontend:
     name: Build & Test Frontend
     runs-on: ubuntu-latest
-    needs: build-backend
+    if: contains(github.ref, 'front2.0') 
 
     steps:
       - name: Checkout code
@@ -72,19 +75,64 @@ jobs:
         run: npm run build
         working-directory: ./KPCFront/kingdomPC
 
-  # quality-gate:
-  #   name: Quality Gate
-  #   runs-on: ubuntu-latest
-  #   needs: [build-backend, build-frontend]
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+    if: contains(github.ref, 'deploy')  
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: kgpc
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: SonarQube Scan
-  #       uses: SonarSource/sonarqube-scan-action@v1.1.0
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-  #       with:
-  #         projectBaseDir: .
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Build backend for tests
+        run: mvn clean package -DskipTests --file ./KPCBack/kingdomPC/pom.xml
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: KPCFront/kingdomPC/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: ./KPCFront/kingdomPC
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./KPCFront/kingdomPC
+
+      - name: Run E2E tests
+        run: |
+          # Levantar servicios con docker-compose.test.yml
+          docker-compose -f docker-compose.test.yml up -d
+          # Esperar a que servicios estén listos
+          sleep 30
+          # Ejecutar tests E2E (ej: con Cypress si lo tienes configurado)
+          # npm run test:e2e (agrega esto a package.json si no existe)
+          # O tests de integración del backend
+          docker-compose -f docker-compose.test.yml down

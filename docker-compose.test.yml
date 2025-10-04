@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: ./KPCFront/kingdomPC
+    container_name: frontend_test
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build: ./KPCBack/kingdomPC
+    container_name: backend_test
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/kgpc
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: test_password  
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    container_name: postgres_test
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: kgpc
+    networks:
+      - app-network
+
+networks:
+  app-network:
