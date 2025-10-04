@@ -13,16 +13,19 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/kgpc
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_PASSWORD: valorant
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
     volumes:
       - ~/.m2:/root/.m2:rw  
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - app-network
 
   db:
-    image: postgres:15
+    image: postgres:13
     container_name: postgres
     restart: always
     environment:
@@ -31,6 +34,11 @@ services:
       POSTGRES_DB: kgpc
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 
