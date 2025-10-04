@@ -30,7 +30,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: valorant
       POSTGRES_DB: kgpc
     volumes:
       - db_data:/var/lib/postgresql/data
