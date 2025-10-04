@@ -50,7 +50,7 @@ const AddProduct = ({ userId, onClose }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/producto/newproducto?userId=${userId}`,
+        `${process.env.API_URL}producto/newproducto?userId=${userId}`,
         {
           method: 'POST',
           headers: {

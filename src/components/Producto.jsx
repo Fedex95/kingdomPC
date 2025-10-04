@@ -29,7 +29,7 @@ export default function Menu({ userData }) {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch('http://localhost:8080/producto/find/all');
+                const response = await fetch(`${process.env.API_URL}producto/find/all`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {

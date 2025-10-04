@@ -31,7 +31,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
     ]
 
     useEffect(() => {
-        fetch('http://localhost:8080/producto/find/all')
+        fetch(`${process.env.API_URL}producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch(() => {

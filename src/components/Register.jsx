@@ -69,7 +69,7 @@ function Register() {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/usuarios/createUsuario', {
+      const response = await fetch(`${process.env.API_URL}usuarios/createUsuario`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

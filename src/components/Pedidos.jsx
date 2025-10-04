@@ -9,7 +9,7 @@ export default function Pedidos({ userId }) {
     useEffect(() => {
         const fetchHistorial = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/historial/${userId}`);
+                const response = await fetch(`${process.env.API_URL}historial/${userId}`);
                 if (!response.ok) {
                     throw new Error('Error al obtener el historial de pedidos');
                 }

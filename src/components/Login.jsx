@@ -28,7 +28,7 @@ function Login({ onLogin }) {
 
         try {
             const verifyResponse = await fetch(
-                `http://localhost:8080/usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
+                `${process.env.API_URL}usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
                 {
                     method: 'POST',
                     headers: {
