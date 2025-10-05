@@ -32,3 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 node_modules
+
+###CI
+./github/workflows/ci-backend.yml
