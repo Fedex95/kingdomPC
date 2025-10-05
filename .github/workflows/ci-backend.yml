@@ -34,12 +34,12 @@ jobs:
       - name: Build and test backend with Maven
         run: mvn clean verify --file ./pom.xml
 
-      - name: Merge to deploy if tests pass
+      - name: Merge to deploy-backend if tests pass
         if: success()
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git fetch origin
           git checkout deploy-backend
-          git merge origin/master -m "Merge master into deploy-backend"
+          git merge origin/master --allow-unrelated-histories -m "Merge master into deploy"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Fedex95/kingdomPC.git deploy
