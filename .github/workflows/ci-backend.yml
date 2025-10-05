@@ -41,5 +41,5 @@ jobs:
           git config --global user.name "GitHub Action"
           git fetch origin
           git checkout deploy-backend
-          git merge origin/master --allow-unrelated-histories -m "Merge master into deploy"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Fedex95/kingdomPC.git deploy
+          git merge origin/master -X theirs --allow-unrelated-histories -m "Auto merge master -> deploy-backend"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Fedex95/kingdomPC.git deploy-backend
