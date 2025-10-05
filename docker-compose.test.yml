@@ -22,7 +22,7 @@ services:
       - app-network
 
   db:
-    image: postgres:15
+    image: postgres:16
     container_name: postgres_test
     environment:
       POSTGRES_USER: postgres
