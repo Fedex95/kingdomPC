@@ -16,6 +16,8 @@ function App() {
     return localStorage.getItem('isAuthenticated') === 'true';
   });
 
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+
   const [userData, setUserData] = useState(() => {
     const savedUser = localStorage.getItem('userData');
     return savedUser ? JSON.parse(savedUser) : null;
@@ -33,7 +35,7 @@ function App() {
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('userData', JSON.stringify(data));
 
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/usuarios/${data.id}/admin`)
+    fetch(`${REACT_APP_API_BASE_URL}/usuarios/${data.id}/admin`)
       .then(response => response.json())
       .then(isAdminResponse => {
         setAdmin(isAdminResponse);
