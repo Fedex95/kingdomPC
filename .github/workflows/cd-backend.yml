@@ -30,31 +30,23 @@ jobs:
             echo "Espacio antes de limpiar:"
             df -h /
             
-            # Copiar docker-compose.yml para down
             mkdir -p /home/ec2-user/deploy
-            scp -o StrictHostKeyChecking=no docker-compose.yml ec2-user@18.188.215.174:/home/ec2-user/deploy/ || echo "Ya copiado"
             
             cd /home/ec2-user/deploy
             
-            # Parar contenedores antiguos
-            docker-compose down || echo "No había contenedores antiguos"
+            # Parar contenedor backend antiguo
+            docker stop backend || echo "No había backend corriendo"
+            docker rm backend || echo "No había backend"
             
-            # Parar todos los contenedores corriendo
-            docker stop $(docker ps -q) 2>/dev/null || echo "No había contenedores corriendo"
-            
-            # Limpiar Docker completamente
-            docker system prune -a --volumes -f || echo "No se pudo limpiar"
+            # Limpiar imágenes no usadas
+            docker image prune -f || echo "No se pudo limpiar imágenes"
             
             # Limpiar archivos temporales
-            sudo yum clean all || echo "No se pudo limpiar yum"
             sudo rm -rf /tmp/* || echo "No se pudo limpiar tmp"
             
             echo "Espacio después de limpiar:"
             df -h /
-            docker system df
           EOF
-        env:
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }} 
 
   deploy:  
     runs-on: ubuntu-latest
@@ -80,33 +72,41 @@ jobs:
             exit 1
           }
 
-      - name: Desplegar aplicación en EC2 vía Docker Compose
+      - name: Verificar archivos copiados
         run: |
-          echo "Ejecutando despliegue de aplicación:"
+          ssh -o ServerAliveInterval=60 ec2-user@18.188.215.174 "ls -la /home/ec2-user/deploy/Dockerfile" || {
+            echo "Dockerfile no encontrado"
+            exit 1
+          }
+
+      - name: Desplegar backend en EC2 vía Docker
+        run: |
+          echo "Ejecutando despliegue del backend:"
 
           ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@18.188.215.174 << EOF
             set -euo pipefail
 
             cd /home/ec2-user/deploy
 
-            echo "Desplegando aplicación..."
-            export DOCKER_BUILDKIT=1
-            export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" 
+            echo "Construyendo imagen..."
+            docker build -t deploy-backend .
             
-            # REBUILD LIMPIO
-            docker-compose build --no-cache
-            
-            docker-compose up -d || {
+            echo "Ejecutando contenedor..."
+            docker run -d --name backend -p 8080:8080 \
+              -e SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/kgpc \
+              -e SPRING_DATASOURCE_USERNAME=postgres \
+              -e SPRING_DATASOURCE_PASSWORD="${POSTGRES_PASSWORD}" \
+              deploy-backend || {
               echo 'Falló startup'
               exit 1
             }
 
-            echo "Verificando contenedores"
+            echo "Verificando contenedor"
             docker ps
             echo "Logs del backend:"
             docker logs backend | tail -20
-            echo "Logs del frontend:"
-            docker logs frontend | tail -10
 
-            echo "Aplicación desplegada"
+            echo "Backend desplegado"
           EOF
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
