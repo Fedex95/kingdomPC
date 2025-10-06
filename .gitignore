@@ -39,3 +39,4 @@ node_modules
 ##Test
 ./src/test
 ./KPCBack
+./src/main/java/com/tienda/kpback/Config/google_checks.xml

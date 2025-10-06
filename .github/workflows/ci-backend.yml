@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-backend:
-    name: Build & Test Backend
+    name: Build, Test & Lint Backend
     runs-on: ubuntu-latest
 
     steps:
@@ -36,6 +36,21 @@ jobs:
       - name: Build and test backend with Maven
         run: mvn clean verify --file ./pom.xml
 
+      - name: Run Checkstyle (format test)
+        run: mvn checkstyle:check --file ./pom.xml
+
+      # 3. Quality Gates con SonarCloud (opcional si ya configuras sonar-project.properties)
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarcloud-github-action@master
+      #   with:
+      #     projectBaseDir: .
+      #     args: >
+      #       -Dsonar.projectKey=Fedex95_kingdomPC
+      #       -Dsonar.organization=fedex95
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Merge to deploy-backend if tests pass
         if: success()
         run: |
@@ -45,4 +60,3 @@ jobs:
           git checkout deploy-backend
           git merge origin/master -X theirs --allow-unrelated-histories -m "Auto merge master -> deploy-backend"
           git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/Fedex95/kingdomPC.git deploy-backend
-
