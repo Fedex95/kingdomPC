@@ -120,7 +120,6 @@
             </executions>
             <configuration>
                 <configLocation>src/main/java/com/tienda/kpback/Config/google_checks.xml</configLocation>
-                <encoding>UTF-8</encoding>
                 <consoleOutput>true</consoleOutput>
                 <failsOnError>true</failsOnError>
             </configuration>
