@@ -39,17 +39,16 @@ jobs:
       - name: Run Checkstyle (format test)
         run: mvn checkstyle:check --file ./pom.xml
 
-      # 3. Quality Gates con SonarCloud (opcional si ya configuras sonar-project.properties)
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@master
-      #   with:
-      #     projectBaseDir: .
-      #     args: >
-      #       -Dsonar.projectKey=Fedex95_kingdomPC
-      #       -Dsonar.organization=fedex95
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=Fedex95_kingdomPC
+            -Dsonar.organization=daslicht
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge to deploy-backend if tests pass
         if: success()
