@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-backend:
-    name: Build, Test & Lint Backend
+    name: Build, Lint Backend, SonarCloud 
     runs-on: ubuntu-latest
 
     steps:
