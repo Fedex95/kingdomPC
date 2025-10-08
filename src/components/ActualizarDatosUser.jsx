@@ -81,8 +81,6 @@ export default function ActualizarDatosUser({ userData }) {
                 throw new Error('Error al actualizar el campo');
             }
 
-            const result = await response.json();
-
             setUpdatedUserData(prev => ({
                 ...prev,
                 [fieldName]: formData[fieldName],

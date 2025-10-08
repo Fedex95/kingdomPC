@@ -10,8 +10,6 @@ jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));
 
-const mockNavigate = require('react-router-dom').useNavigate;
-
 beforeAll(() => {
   // Mock createStylesheet to avoid CSS parsing errors
   const helpers = require('jsdom/lib/jsdom/living/helpers/stylesheets');
@@ -66,21 +64,7 @@ describe('Register Component', () => {
         <Register />
       </MemoryRouter>
     );
-    // Fill all fields
-    const fields = [
-      { label: 'Nombres', value: 'Juan' },
-      { label: 'Apellidos', value: 'Pérez' },
-      { label: 'Cédula', value: '123456789' },
-      { label: 'Teléfono', value: '1234567890' },
-      { label: 'Dirección', value: 'Calle 123' },
-      { label: 'Correo', value: 'juan@example.com' },
-      { label: 'Nombre de usuario', value: 'juanp' },
-      { label: 'Contraseña', value: 'password' },
-      { label: 'Titular de la tarjeta', value: 'Juan Pérez' },
-      { label: 'Dígitos', value: '1234567890123456' },
-      { label: 'Fecha de validación', value: '12/25' },
-      { label: 'CVV', value: '123' },
-    ];
+   
     const submitButton = screen.getByText('Registrarse');
     fireEvent.click(submitButton);
   });
@@ -111,21 +95,7 @@ describe('Register Component', () => {
         <Register />
       </MemoryRouter>
     );
-    // Fill all fields
-    const fields = [
-      { label: 'Nombres', value: 'Juan' },
-      { label: 'Apellidos', value: 'Pérez' },
-      { label: 'Cédula', value: '123456789' },
-      { label: 'Teléfono', value: '1234567890' },
-      { label: 'Dirección', value: 'Calle 123' },
-      { label: 'Correo', value: 'juan@example.com' },
-      { label: 'Nombre de usuario', value: 'juanp' },
-      { label: 'Contraseña', value: 'password' },
-      { label: 'Titular de la tarjeta', value: 'Juan Pérez' },
-      { label: 'Dígitos', value: '1234567890123456' },
-      { label: 'Fecha de validación', value: '12/25' },
-      { label: 'CVV', value: '123' },
-    ];
+    
     const submitButton = screen.getByText('Registrarse');
     fireEvent.click(submitButton);
   });

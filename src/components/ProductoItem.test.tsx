@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 jest.mock('@heroicons/react/24/solid', () => ({
   ShoppingCartIcon: () => <div>Cart Icon</div>,
 }));

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Pedidos from './Pedidos';
 
 const mockFetch = jest.fn();
@@ -39,10 +39,11 @@ describe('Pedidos Component', () => {
 
     render(<Pedidos userId={1} />);
 
-    await waitFor(() => {
-      expect(screen.getByRole('table')).toBeInTheDocument();
-      expect(screen.getAllByRole('row')).toHaveLength(2); // header + 1 data row
-    });
+    const table = await screen.findByRole('table');
+    expect(table).toBeInTheDocument();
+
+    const rows = await screen.findAllByRole('row'); 
+    expect(rows).toHaveLength(2); 
   });
 
   test('handles fetch error', async () => {
@@ -50,8 +51,8 @@ describe('Pedidos Component', () => {
 
     render(<Pedidos userId={1} />);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Error/)).toBeInTheDocument();
-    });
+    // Usa findByText para esperar al mensaje de error 
+    const err = await screen.findByText(/Error/);
+    expect(err).toBeInTheDocument();
   });
 });

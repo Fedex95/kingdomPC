@@ -1,0 +1,66 @@
+name: CI Frontend
+
+on:
+  push:
+    branches:
+      - front2.0
+  pull_request:
+    branches:
+      - front2.0
+
+jobs:
+  build-frontend:
+    name: Build, Lint Frontend, SonarCloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint (CI - fail on warnings)
+        run: npm run lint:ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=Fedex95_kingdomPC
+            -Dsonar.organization=daslicht
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge to deploy-frontend if tests pass
+        if: success()
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git fetch origin
+          git checkout deploy-frontend
+          git merge origin/front2.0 -X theirs --allow-unrelated-histories -m "Auto merge front2.0 -> deploy-frontend"
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/Fedex95/kingdomPC.git deploy-frontend

@@ -12,8 +12,6 @@ jest.mock('react-router-dom', () => ({
     useNavigate: jest.fn(),
 }));
 
-const mockNavigate = require('react-router-dom').useNavigate;
-
 beforeAll(() => {
     // Mock createStylesheet to avoid CSS parsing errors
     const helpers = require('jsdom/lib/jsdom/living/helpers/stylesheets');
@@ -81,10 +79,10 @@ test('shows success message and navigates on successful login', async () => {
     fireEvent.change(passwordInput, { target: { value: 'testpass' } });
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-        expect(screen.getByText('Inicio de sesión exitoso')).toBeInTheDocument();
-        expect(mockOnLogin).toHaveBeenCalledWith({ usuario: 'testuser', id: 1 });
-    });
+    const successMsg = await screen.findByText('Inicio de sesión exitoso');
+    expect(successMsg).toBeInTheDocument();
+
+    await waitFor(() => expect(mockOnLogin).toHaveBeenCalledWith({ usuario: 'testuser', id: 1 }));
 });
 
 test('shows error message on invalid login', async () => {
