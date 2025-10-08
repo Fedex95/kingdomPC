@@ -37,7 +37,6 @@ node_modules
 .github/workflows/
 
 ##Test
-./src/test
-./KPCBack
-./src/main/java/com/tienda/kpback/Config/google_checks.xml
+.src/test
+.src/main/java/com/tienda/kpback/Config/google_checks.xml
 sonar-project.properties
