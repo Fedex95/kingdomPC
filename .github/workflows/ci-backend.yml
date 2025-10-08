@@ -3,14 +3,14 @@ name: CI Backend
 on:
   push:
     branches:
-      - master  
+      - master
   pull_request:
     branches:
       - master
 
 jobs:
   build-backend:
-    name: Build, Lint Backend, SonarCloud 
+    name: Build, Lint Backend, SonarCloud
     runs-on: ubuntu-latest
 
     steps:
