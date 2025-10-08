@@ -34,9 +34,10 @@ build/
 node_modules
 
 ###CI
-./github/workflows/ci-backend.yml
+.github/workflows/
 
 ##Test
 ./src/test
 ./KPCBack
 ./src/main/java/com/tienda/kpback/Config/google_checks.xml
+sonar-project.properties
