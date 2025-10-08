@@ -33,6 +33,8 @@ build/
 .vscode/
 node_modules
 
+###CI
+
 ##Test
 .src/test
 .src/main/java/com/tienda/kpback/Config/google_checks.xml
