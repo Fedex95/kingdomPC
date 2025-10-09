@@ -1,0 +1,17 @@
+engines:
+  - name: checkstyle
+    enabled: true
+  - name: eslint
+    enabled: true
+  - name: sonar-java
+    enabled: true
+  - name: jest
+    enabled: true
+
+exclude_paths:
+  - "node_modules/**"
+  - "target/**"
+  - "build/**"
+  - "coverage/**"
+  - "**/*.test.*"
+  - "**/*.spec.*"

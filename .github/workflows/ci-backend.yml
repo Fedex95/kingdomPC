@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-backend:
-    name: Build, Lint Backend, SonarCloud
+    name: Build, Lint Backend, Codacy
     runs-on: ubuntu-latest
 
     steps:
@@ -39,16 +39,12 @@ jobs:
       - name: Run Checkstyle (format test)
         run: mvn checkstyle:check --file ./pom.xml
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
         with:
-          projectBaseDir: .
-          args: >
-            -Dsonar.projectKey=Fedex95_kingdomPC
-            -Dsonar.organization=daslicht
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          upload: true
+          fail-if-incomplete: true
 
       - name: Merge to deploy-backend if tests pass
         if: success()
