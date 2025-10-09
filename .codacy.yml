@@ -12,6 +12,7 @@ engines:
   - name: lizard
     enabled: false
 
+
 exclude_paths:
   - "node_modules/**"
   - "target/**"
