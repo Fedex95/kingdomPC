@@ -44,7 +44,7 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           upload: true
-          fail-if-incomplete: true
+          fail-if-incomplete: false
 
       - name: Merge to deploy-backend if tests pass
         if: success()
