@@ -39,12 +39,16 @@ describe('DeleteProducto Component', () => {
 
   test('displays product data', async () => {
     render(<DeleteProducto userId={1} toast={mockToast} onClose={mockOnClose} />);
-    await waitFor(() => {
-      expect(screen.getByText('Producto 1')).toBeInTheDocument();
-      expect(screen.getByText('Producto 2')).toBeInTheDocument();
-      expect(screen.getByText('100')).toBeInTheDocument();
-      expect(screen.getByText('Mouse')).toBeInTheDocument();
-    });
+
+    const prod1 = await screen.findByText('Producto 1');
+    const prod2 = await screen.findByText('Producto 2');
+    const price = await screen.findByText('100');
+    const category = await screen.findByText('Mouse');
+
+    expect(prod1).toBeInTheDocument();
+    expect(prod2).toBeInTheDocument();
+    expect(price).toBeInTheDocument();
+    expect(category).toBeInTheDocument();
   });
 
   test('close button calls onClose', () => {

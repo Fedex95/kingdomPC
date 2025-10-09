@@ -34,12 +34,18 @@ describe('Pedido Component', () => {
 
     render(<Pedido userData={{ id: 1 }} />);
 
-    await waitFor(() => {
-      expect(screen.getByText('ID Pedido: 1')).toBeInTheDocument();
-      expect(screen.getByText(/Juan/)).toBeInTheDocument();
-      expect(screen.getByText(/Pérez/)).toBeInTheDocument();
-      expect(screen.getByText('Total: 30 USD')).toBeInTheDocument();
-    });
+    // una aserción por espera: usa findBy* para cada elemento
+    const idElem = await screen.findByText('ID Pedido: 1');
+    expect(idElem).toBeInTheDocument();
+
+    const nombreElem = await screen.findByText(/Juan/);
+    expect(nombreElem).toBeInTheDocument();
+
+    const apellidoElem = await screen.findByText(/Pérez/);
+    expect(apellidoElem).toBeInTheDocument();
+
+    const totalElem = await screen.findByText('Total: 30 USD');
+    expect(totalElem).toBeInTheDocument();
   });
 
   test('does not fetch if userData.id is not present', () => {

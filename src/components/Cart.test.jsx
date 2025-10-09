@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import Cart from './Cart';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -51,12 +51,12 @@ describe('Cart Component', () => {
   });
 
   test('renders cart container', () => {
-    render(
+    const { container } = render(
       <BrowserRouter>
         <Cart userData={mockUserData} />
       </BrowserRouter>
     );
-    const container = document.querySelector('.cart-container');
-    expect(container).toBeInTheDocument();
+    const found = within(container).getByText('Tu carrito está vacío');
+    expect(found).toBeInTheDocument();
   });
 });

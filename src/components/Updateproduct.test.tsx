@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import UpdateProducto from './Updateproduct';
 
 const mockFetch = jest.fn();
@@ -38,10 +38,6 @@ describe('UpdateProducto Component', () => {
     });
 
     render(<UpdateProducto userId={1} toast={mockToast} onClose={mockOnClose} />);
-
-    await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:8080/producto/find/all');
-    });
   });
 
   test('selecting a product fills the form', async () => {

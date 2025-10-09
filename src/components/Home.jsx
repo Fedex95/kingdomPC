@@ -207,6 +207,10 @@ function Home({ userData }) {
                         {categorias[producto.categoria] || producto.categoria}
                     </span>
                 </div>
+
+                <div className="mt-3">
+                    {quantityTemplate(producto.id, quantities[producto.id] ?? 1, handleQuantityChange)}
+                </div>
             </div>
         </Card>
     );

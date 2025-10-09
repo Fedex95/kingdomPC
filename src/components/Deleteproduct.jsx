@@ -18,7 +18,7 @@ export default function DeleteProducto({ userId, toast, onClose }) {
                     life: 3000,
                 });
             });
-    }, []);
+    }, [toast]);
 
     const handleDelete = (productoId) => {
         fetch(`${process.env.API_URL}producto/delete/${productoId}?userId=${userId}`, {

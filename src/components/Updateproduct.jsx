@@ -35,14 +35,16 @@ export default function UpdateProducto({ userId, toast, onClose }) {
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch(() => {
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'No se pudieron cargar los productos.',
-                    life: 3000,
-                });
+                if (toast && toast.current) {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'No se pudieron cargar los productos.',
+                        life: 3000,
+                    });
+                }
             });
-    }, []);
+    }, [toast]);
 
     const handleProductSelect = (productoId) => {
         const selected = productos.find((producto) => producto.id === productoId);

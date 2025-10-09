@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Menu from './Producto';
 
 const mockFetch = jest.fn();
@@ -21,7 +21,7 @@ describe('Menu Component', () => {
         id: 1,
         nombre: 'Producto 1',
         descripcion: 'Descripción 1',
-        precio: 10.00,
+        precio: 10.0,
         categoria: 'Mouse',
         imagenURL: 'url1',
       },
@@ -33,10 +33,10 @@ describe('Menu Component', () => {
 
     render(<Menu userData={{ id: 1 }} />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Producto 1')).toBeInTheDocument();
-      expect(screen.getByText('$10.00')).toBeInTheDocument();
-    });
+    const prod = await screen.findByText('Producto 1');
+    const price = await screen.findByText('$10.00');
+    expect(prod).toBeInTheDocument();
+    expect(price).toBeInTheDocument();
   });
 
   test('opens dialog on product click', async () => {
@@ -45,7 +45,7 @@ describe('Menu Component', () => {
         id: 1,
         nombre: 'Producto 1',
         descripcion: 'Descripción 1',
-        precio: 10.00,
+        precio: 10.0,
         categoria: 'Mouse',
         imagenURL: 'url1',
       },
@@ -57,10 +57,10 @@ describe('Menu Component', () => {
 
     render(<Menu userData={{ id: 1 }} />);
 
-    await waitFor(() => {
-      fireEvent.click(screen.getByText('Producto 1'));
-      expect(screen.getByText('Detalles del plato')).toBeInTheDocument();
-    });
+    const prod = await screen.findByText('Producto 1');
+    fireEvent.click(prod);
+    const details = await screen.findByText('Detalles del plato');
+    expect(details).toBeInTheDocument();
   });
 
   test('adds to cart successfully', async () => {
@@ -69,7 +69,7 @@ describe('Menu Component', () => {
         id: 1,
         nombre: 'Producto 1',
         descripcion: 'Descripción 1',
-        precio: 10.00,
+        precio: 10.0,
         categoria: 'Mouse',
         imagenURL: 'url1',
       },
@@ -85,15 +85,13 @@ describe('Menu Component', () => {
 
     render(<Menu userData={{ id: 1 }} />);
 
-    await waitFor(() => {
-      fireEvent.click(screen.getByText('Producto 1'));
-    });
+    const prod = await screen.findByText('Producto 1');
+    fireEvent.click(prod);
+    const addBtn = screen.getByText('Agregar al carrito');
+    fireEvent.click(addBtn);
 
-    fireEvent.click(screen.getByText('Agregar al carrito'));
-
-    await waitFor(() => {
-      expect(screen.getByText('Producto 1 agregado al carrito')).toBeInTheDocument();
-    });
+    const successMsg = await screen.findByText('Producto 1 agregado al carrito');
+    expect(successMsg).toBeInTheDocument();
   });
 
   test('handles add to cart error', async () => {
@@ -102,7 +100,7 @@ describe('Menu Component', () => {
         id: 1,
         nombre: 'Producto 1',
         descripcion: 'Descripción 1',
-        precio: 10.00,
+        precio: 10.0,
         categoria: 'Mouse',
         imagenURL: 'url1',
       },
@@ -118,14 +116,12 @@ describe('Menu Component', () => {
 
     render(<Menu userData={{ id: 1 }} />);
 
-    await waitFor(() => {
-      fireEvent.click(screen.getByText('Producto 1'));
-    });
+    const prod = await screen.findByText('Producto 1');
+    fireEvent.click(prod);
+    const addBtn = screen.getByText('Agregar al carrito');
+    fireEvent.click(addBtn);
 
-    fireEvent.click(screen.getByText('Agregar al carrito'));
-
-    await waitFor(() => {
-      expect(screen.getByText('No se pudo agregar al carrito')).toBeInTheDocument();
-    });
+    const errMsg = await screen.findByText('No se pudo agregar al carrito');
+    expect(errMsg).toBeInTheDocument();
   });
 });
