@@ -45,11 +45,15 @@ jobs:
         run: npm run build
 
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@master
+        uses: codacy/codacy-analysis-cli-action@v4
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           upload: true
           fail-if-incomplete: false
+          fail-if-quality-gate-fails: true
+          output: results.sarif
+          verbose: true
+          arguments: --commit-uuid ${{ github.sha }}
 
       - name: Merge to deploy-frontend if tests pass
         if: success()

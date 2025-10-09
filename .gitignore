@@ -24,3 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .target/
+# Ignorar archivos temporales de análisis
+results.sarif
