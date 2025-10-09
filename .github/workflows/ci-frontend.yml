@@ -3,14 +3,14 @@ name: CI Frontend
 on:
   push:
     branches:
-      - front2.0
+      - front2.0  
   pull_request:
     branches:
       - front2.0
 
 jobs:
   build-frontend:
-    name: Build, Lint Frontend, SonarCloud
+    name: Build, Lint Frontend, Codacy
     runs-on: ubuntu-latest
 
     steps:
@@ -44,16 +44,12 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
         with:
-          projectBaseDir: .
-          args: >
-            -Dsonar.projectKey=Fedex95_kingdomPC
-            -Dsonar.organization=daslicht
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          upload: true
+          fail-if-incomplete: false
 
       - name: Merge to deploy-frontend if tests pass
         if: success()
