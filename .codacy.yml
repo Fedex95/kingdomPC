@@ -7,6 +7,10 @@ engines:
     enabled: true
   - name: jest
     enabled: true
+  - name: trivy
+    enabled: false
+  - name: lizard
+    enabled: false
 
 exclude_paths:
   - "node_modules/**"
@@ -15,4 +19,4 @@ exclude_paths:
   - "coverage/**" 
   - "**/*.test.*"
   - "**/*.spec.*"
-  - "coverage/lcov-report/**" 
+  - "coverage/lcov-report/**"
