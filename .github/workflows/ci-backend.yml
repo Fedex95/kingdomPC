@@ -40,7 +40,7 @@ jobs:
         run: mvn checkstyle:check --file ./pom.xml
 
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@13e28f5bd5b48b69b8393d8e6a3a018c3a2f9845  
+        uses: codacy/github-action@v1.0.0 
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           upload: true
