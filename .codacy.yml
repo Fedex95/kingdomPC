@@ -12,6 +12,7 @@ exclude_paths:
   - "node_modules/**"
   - "target/**"
   - "build/**"
-  - "coverage/**"
+  - "coverage/**" 
   - "**/*.test.*"
   - "**/*.spec.*"
+  - "coverage/lcov-report/**" 
