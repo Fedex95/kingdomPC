@@ -76,7 +76,7 @@ export default function Menu({ userData }) {
         if (!productItem || !quantity) return;
 
         try {
-            const response = await fetch('http://localhost:8080/cart/agregar', {
+            const response = await fetch(`${process.env.API_URL}cart/agregar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -38,7 +38,7 @@ function Login({ onLogin }) {
             );
 
             if (verifyResponse.status === 200) {
-                const usersResponse = await fetch('http://localhost:8080/usuarios/get/all', {
+                const usersResponse = await fetch(`${process.env.API_URL}usuarios/get/all`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
