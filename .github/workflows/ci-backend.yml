@@ -8,7 +8,6 @@ on:
 jobs:
   build-backend:
     name: Build, Lint Backend, Codacy
-    name: Build, Lint Backend, Codacy
     runs-on: ubuntu-latest
 
     steps:
