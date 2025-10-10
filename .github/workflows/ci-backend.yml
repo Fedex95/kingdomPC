@@ -8,6 +8,7 @@ on:
 jobs:
   build-backend:
     name: Build, Lint Backend, Codacy
+    name: Build, Lint Backend, Codacy
     runs-on: ubuntu-latest
 
     steps:
@@ -36,6 +37,8 @@ jobs:
       - name: Run Checkstyle (format test)
         run: mvn checkstyle:check --file ./pom.xml
 
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@master
         with:
