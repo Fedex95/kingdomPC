@@ -33,7 +33,8 @@ build/
 .vscode/
 node_modules
 
-###CI
+###ENV
+.env
 
 ##Test
 .src/test
