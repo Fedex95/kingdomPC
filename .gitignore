@@ -36,6 +36,3 @@ node_modules
 ###ENV
 .env
 
-##Test
-.src/test
-.src/main/java/com/tienda/kpback/Config/google_checks.xml
