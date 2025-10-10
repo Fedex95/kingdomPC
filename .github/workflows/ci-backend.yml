@@ -1,9 +1,6 @@
 name: CI Backend
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
@@ -45,13 +42,3 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           upload: true
           fail-if-incomplete: false
-
-      - name: Merge to deploy-backend if tests pass
-        if: success()
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-          git fetch origin
-          git checkout deploy-backend
-          git merge origin/master -X theirs --allow-unrelated-histories -m "Auto merge master -> deploy-backend"
-          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/Fedex95/kingdomPC.git deploy-backend
