@@ -3,6 +3,7 @@ package com.tienda.kpback.Config;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+
 public class Pass {
     public static String encrip(String pass) throws NoSuchAlgorithmException{
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
