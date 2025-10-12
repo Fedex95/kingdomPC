@@ -1,115 +1,70 @@
 name: CD Backend
 
 on:
-  pull_request:
+  push:
     branches:
-      - deploy-backend
+      - deploy-backend  
 
 jobs:
-  cleanup: 
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout del repositorio
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Establecer conexión SSH
-        uses: shimataro/ssh-key-action@v2  
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:${{ github.sha }} .
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:${{ github.sha }}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:latest
+
+      - name: Setup SSH
+        uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.EC2_SSH_KEY }}
           known_hosts: unnecessary
 
-      - name: Añadir EC2 a known_hosts  
+      - name: Add EC2 to known_hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -p 22 -H 18.188.215.174 >> ~/.ssh/known_hosts
 
-      - name: Limpiar espacio en EC2
+      - name: Deploy backend on EC2
         run: |
-          echo "Limpiando espacio en EC2..."
-          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@18.188.215.174 << EOF
-            echo "Espacio antes de limpiar:"
-            df -h /
-            
-            mkdir -p /home/ec2-user/deploy
-            
-            cd /home/ec2-user/deploy
-            
-            # Parar contenedor backend antiguo
-            docker stop backend || echo "No había backend corriendo"
-            docker rm backend || echo "No había backend"
-            
-            # Limpiar imágenes no usadas
-            docker image prune -f || echo "No se pudo limpiar imágenes"
-            
-            # Limpiar archivos temporales
-            sudo rm -rf /tmp/* || echo "No se pudo limpiar tmp"
-            
-            echo "Espacio después de limpiar:"
-            df -h /
-          EOF
-
-  deploy:  
-    runs-on: ubuntu-latest
-    needs: cleanup 
-
-    steps:
-      - name: Checkout del repositorio
-        uses: actions/checkout@v3
-
-      - name: Establecer conexión SSH
-        uses: shimataro/ssh-key-action@v2  
-        with:
-          key: ${{ secrets.EC2_SSH_KEY }}
-          known_hosts: unnecessary
-
-      - name: Añadir EC2 a known_hosts  
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p 22 -H 18.188.215.174 >> ~/.ssh/known_hosts
-
-      - name: Copiar archivos a la EC2 con rsync
-        run: |
-          echo "Iniciando transferencia de archivos a EC2"
-          rsync -avz --exclude '.git' ./ ec2-user@18.188.215.174:/home/ec2-user/deploy || {
-            echo "Error al copiar archivos con rsync"
-            exit 1
-          }
-
-      - name: Verificar archivos copiados
-        run: |
-          ssh -o ServerAliveInterval=60 ec2-user@18.188.215.174 "ls -la /home/ec2-user/deploy/Dockerfile" || {
-            echo "Dockerfile no encontrado"
-            exit 1
-          }
-
-      - name: Desplegar backend en EC2 vía Docker
-        run: |
-          echo "Ejecutando despliegue del backend:"
-
           ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@18.188.215.174 << EOF
             set -euo pipefail
 
-            cd /home/ec2-user/deploy
+            echo "Pulling image from Docker Hub..."
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:${{ github.sha }}
 
-            echo "Construyendo imagen..."
-            docker build -t deploy-backend .
-            
-            echo "Ejecutando contenedor..."
+            echo "Stopping old container if exists..."
+            docker stop backend || echo "No container running"
+            docker rm backend || echo "No container to remove"
+
+            echo "Running new container..."
             docker run -d --name backend -p 8080:8080 \
               -e SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/kgpc \
               -e SPRING_DATASOURCE_USERNAME=postgres \
               -e SPRING_DATASOURCE_PASSWORD="${POSTGRES_PASSWORD}" \
-              deploy-backend || {
-              echo 'Falló startup'
-              exit 1
-            }
+              ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:${{ github.sha }}
 
-            echo "Verificando contenedor"
+            echo "Verifying container..."
             docker ps
-            echo "Logs del backend:"
+            echo "Last logs:"
             docker logs backend | tail -20
 
-            echo "Backend desplegado"
+            echo "Deployment completed successfully"
           EOF
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
