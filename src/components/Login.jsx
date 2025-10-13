@@ -28,7 +28,7 @@ function Login({ onLogin }) {
 
         try {
             const verifyResponse = await fetch(
-                `${process.env.REACT_APP_API_URL}usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
+                `/api/usuarios/viewPass?usuario=${usuario}&pass=${pass}`,
                 {
                     method: 'POST',
                     headers: {
@@ -38,7 +38,7 @@ function Login({ onLogin }) {
             );
 
             if (verifyResponse.status === 200) {
-                const usersResponse = await fetch(`${process.env.REACT_APP_API_URL}usuarios/get/all`, {
+                const usersResponse = await fetch(`/api/usuarios/get/all`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

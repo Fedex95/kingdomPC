@@ -29,7 +29,7 @@ export default function Menu({ userData }) {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}producto/find/all`);
+                const response = await fetch(`/api/producto/find/all`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
@@ -76,7 +76,7 @@ export default function Menu({ userData }) {
         if (!productItem || !quantity) return;
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}cart/agregar`, {
+            const response = await fetch(`/api/cart/agregar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
