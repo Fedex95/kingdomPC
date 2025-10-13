@@ -50,7 +50,7 @@ const AddProduct = ({ userId, onClose }) => {
 
     try {
       const response = await fetch(
-        `${process.env.API_URL}producto/newproducto?userId=${userId}`,
+        `${process.env.REACT_APP_API_URL}producto/newproducto?userId=${userId}`,
         {
           method: 'POST',
           headers: {
