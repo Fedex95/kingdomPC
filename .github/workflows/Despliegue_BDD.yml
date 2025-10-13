@@ -55,7 +55,7 @@ jobs:
             echo "Verificando contenedores"
             docker ps
             echo "Logs de la BDD:"
-            docker logs bdd_nginx-db | tail -20
+            docker logs postgres | tail -20
             echo "Logs de Nginx:"
             docker logs nginx | tail -10
 
