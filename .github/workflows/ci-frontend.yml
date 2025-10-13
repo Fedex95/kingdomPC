@@ -1,9 +1,6 @@
 name: CI Frontend
 
 on:
-  push:
-    branches:
-      - front2.0  
   pull_request:
     branches:
       - front2.0
@@ -35,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run lint (CI - fail on warnings)
+      - name: Run lint 
         run: npm run lint:ci
 
       - name: Run tests with coverage
@@ -50,13 +47,9 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           upload: true
           fail-if-incomplete: false
-
-      - name: Merge to deploy-frontend if tests pass
-        if: success()
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-          git fetch origin
-          git checkout deploy-frontend
-          git merge origin/front2.0 -X theirs --allow-unrelated-histories -m "Auto merge front2.0 -> deploy-frontend"
-          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/Fedex95/kingdomPC.git deploy-frontend
+  
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
