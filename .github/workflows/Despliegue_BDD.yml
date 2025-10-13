@@ -24,7 +24,7 @@ jobs:
       - name: Copiar archivos a la EC2 con rsync
         run: |
           echo "Iniciando transferencia de archivos a EC2..."
-          rsync -avz --exclude '.git' ./ ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/home/ec2-user/deploy || {
+          rsync -avz --exclude '.git' ./ ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/home/ec2-user/BDD_Nginx || {
             echo "Error al copiar archivos con rsync"
             exit 1
           }
