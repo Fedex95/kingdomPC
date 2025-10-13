@@ -32,7 +32,7 @@ describe('AdminMenu Component', () => {
     render(<AdminMenu userData={{ id: 1 }} />);
     const updateButton = screen.getByText('Actualizar');
     fireEvent.click(updateButton);
-    expect(screen.getByText('Actualizar producto')).toBeInTheDocument();
+    expect(screen.getByText('ERROR A PROPOSITO')).toBeInTheDocument();
     expect(screen.getByText('Update Product Component')).toBeInTheDocument();
   });
 

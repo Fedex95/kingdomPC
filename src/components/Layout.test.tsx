@@ -38,7 +38,6 @@ describe('Layout Component', () => {
         </Layout>
       </MemoryRouter>
     );
-    // asserting that navigation exists is enough for "renders navbar"
     expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 

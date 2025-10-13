@@ -52,7 +52,7 @@ const AddProduct = ({ userId, onClose }) => {
       const response = await fetch(
         `${process.env.API_URL}producto/newproducto?userId=${userId}`,
         {
-          method: 'POST',
+          method: 'PO',
           headers: {
             'Content-Type': 'application/json',
           },
