@@ -3,7 +3,7 @@ name: CI Frontend
 on:
   pull_request:
     branches:
-      - front2.0
+      - deploy-frontend
 
 jobs:
   build-frontend:
