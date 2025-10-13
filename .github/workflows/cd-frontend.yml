@@ -73,6 +73,7 @@ jobs:
 
             echo "Running new container..."
             docker run -d --name frontend --network bdd_nginx_app-network \
+              -e API_URL=${{ secrets.API_URL }} \
               ${{ secrets.DOCKERHUB_USERNAME }}/deploy-frontend:${{ github.sha }}
 
             echo "Verifying container..."
