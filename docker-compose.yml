@@ -1,29 +1,6 @@
 version: "3.9"
 
 services:
-  frontend:
-    build: ./KPCFront/kingdomPC
-    container_name: frontend
-    networks:
-      - app-network
-
-  backend:
-    build: ./KPCBack/kingdomPC
-    container_name: backend
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-
-    volumes:
-      - ~/.m2:/root/.m2:rw  
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - app-network
-
   db:
     image: postgres:16
     container_name: postgres
@@ -53,11 +30,10 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro  
     depends_on:
-      - frontend
-      - backend
+      - db
     networks:
       - app-network
-
+      
 networks:
   app-network:
 
