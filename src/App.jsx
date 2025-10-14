@@ -33,7 +33,7 @@ function App() {
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('userData', JSON.stringify(data));
 
-    fetch(`http://localhost:8080/usuarios/${data.id}/admin`)
+    fetch(`/api/usuarios/${data.id}/admin`)
       .then(response => response.json())
       .then(isAdminResponse => {
         setAdmin(isAdminResponse);

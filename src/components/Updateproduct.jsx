@@ -76,7 +76,6 @@ export default function UpdateProducto({ userId, toast, onClose }) {
             return;
         }
 
-        
         fetch(`/api/producto/edit/${selectedProducto}?userId=${userId}`, {
             method: 'PUT',
             headers: {
