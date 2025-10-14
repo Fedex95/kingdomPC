@@ -50,7 +50,7 @@ const AddProduct = ({ userId, onClose }) => {
 
     try {
       const response = await fetch(
-        `${process.env.API_URL}producto/newproducto?userId=${userId}`,
+        `/api/producto/newproducto?userId=${userId}`,
         {
           method: 'POST',
           headers: {
@@ -71,13 +71,12 @@ const AddProduct = ({ userId, onClose }) => {
         life: 3000,
       });
 
-      // Reiniciar los campos
       setNombre('');
       setDescripcion('');
       setPrecio(null);
       setImagenURL('');
       setCategoria(null);
-      onClose(); // Cierra el diálogo
+      onClose(); 
     } catch (error) {
       toast.current.show({
         severity: 'error',

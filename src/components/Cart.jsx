@@ -12,7 +12,7 @@ function Cart({ userData }) {
 
     const fetchCartItems = useCallback(async () => {
         try {
-            const response = await fetch(`${process.env.API_URL}usuarios/get/all`);
+            const response = await fetch(`/api/usuarios/get/all`);
 
             if (!response.ok) {
                 throw new Error('Error al cargar el carrito');
@@ -51,7 +51,7 @@ function Cart({ userData }) {
         }
 
         try {
-            const response = await fetch(`${process.env.API_URL}cart/eliminar/${cartId}/${itemId}`, {
+            const response = await fetch(`/api/cart/eliminar/${cartId}/${itemId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ function Cart({ userData }) {
                 return;
             }
 
-            const response = await fetch(`${process.env.API_URL}cart/pagar/${userData.cart.id}`, {
+            const response = await fetch(`/api/cart/pagar/${userData.cart.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

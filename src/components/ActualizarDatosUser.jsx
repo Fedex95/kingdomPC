@@ -69,7 +69,7 @@ export default function ActualizarDatosUser({ userData }) {
                 [fieldName]: formData[fieldName]
             };
 
-            const response = await fetch(`${process.env.API_URL}usuarios/editUsuario/${updatedUserData.id}`, {
+            const response = await fetch(`/api/usuarios/editUsuario/${updatedUserData.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

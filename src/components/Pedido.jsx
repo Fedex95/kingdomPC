@@ -7,7 +7,7 @@ export default function Pedido({ userData }) {
 
     useEffect(() => {
         if (userData && userData.id) {
-            fetch(`${process.env.API_URL}historial/all?userId=${userData.id}`)
+            fetch(`/api/historial/all?userId=${userData.id}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Error fetching orders');

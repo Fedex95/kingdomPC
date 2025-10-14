@@ -31,7 +31,7 @@ export default function UpdateProducto({ userId, toast, onClose }) {
     ]
 
     useEffect(() => {
-        fetch(`${process.env.API_URL}producto/find/all`)
+        fetch(`/api/producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch(() => {
@@ -76,7 +76,8 @@ export default function UpdateProducto({ userId, toast, onClose }) {
             return;
         }
 
-        fetch(`${process.env.API_URL}producto/edit/${selectedProducto}?userId=${userId}`, {
+        
+        fetch(`/api/producto/edit/${selectedProducto}?userId=${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

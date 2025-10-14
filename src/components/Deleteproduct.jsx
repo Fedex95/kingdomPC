@@ -7,7 +7,7 @@ export default function DeleteProducto({ userId, toast, onClose }) {
     const [productos, setProductos] = useState([]); 
 
     useEffect(() => {
-        fetch(`${process.env.API_URL}producto/find/all`)
+        fetch(`/api/producto/find/all`)
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch((error) => {
@@ -21,7 +21,7 @@ export default function DeleteProducto({ userId, toast, onClose }) {
     }, [toast]);
 
     const handleDelete = (productoId) => {
-        fetch(`${process.env.API_URL}producto/delete/${productoId}?userId=${userId}`, {
+        fetch(`/api/producto/delete/${productoId}?userId=${userId}`, {
             method: 'DELETE',
         })
             .then((response) => {
