@@ -1,0 +1,54 @@
+name: CI Backend
+
+on:
+  pull_request_target:
+    branches:
+      - main
+
+jobs:
+  build-backend:
+    name: CI Backend 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  
+          persist-credentials: false
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build and test backend with Maven (with coverage)
+        run: mvn clean verify --file ./pom.xml
+
+      - name: Run Checkstyle (format test)
+        run: mvn checkstyle:check --file ./pom.xml
+
+      - name: SonarCloud Scan (with Quality Gate check)
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=${{ secrets.OR_SONAR }}
+            -Dsonar.projectKey=${{ secrets.SONARP_KEY }}
+            -Dsonar.qualitygate.wait=true
+
+      - name: Upload target report
+        uses: actions/upload-artifact@v4
+        with:
+          name: target-report
+          path: target/
