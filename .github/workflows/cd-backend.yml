@@ -57,6 +57,7 @@ jobs:
               -e SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/kgpc \
               -e SPRING_DATASOURCE_USERNAME=postgres \
               -e SPRING_DATASOURCE_PASSWORD="${POSTGRES_PASSWORD}" \
+              -v /var/log/backend:/app/logs \
               ${{ secrets.DOCKERHUB_USERNAME }}/deploy-backend:${{ github.sha }}
 
             echo "Verifying container..."
