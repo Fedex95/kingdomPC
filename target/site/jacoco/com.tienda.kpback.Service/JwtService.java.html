@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kpback</a> &gt; <a href="index.source.html" class="el_package">com.tienda.kpback.Service</a> &gt; <span class="el_source">JwtService.java</span></div><h1>JwtService.java</h1><pre class="source lang-java linenums">package com.tienda.kpback.Service;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import com.tienda.kpback.Entity.UsuarioEnt;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+
+@Service
+<span class="nc" id="L15">public class JwtService {</span>
+    @Value(&quot;${JWT_SECRET}&quot;)
+    private String secretKeyString;
+
+    private SecretKey getSecretKey() {
+<span class="nc" id="L20">        return Keys.hmacShaKeyFor(secretKeyString.getBytes());</span>
+    }
+
+    public String generateToken(String username) {
+<span class="nc" id="L24">        return Jwts.builder()</span>
+<span class="nc" id="L25">                .setSubject(username)</span>
+<span class="nc" id="L26">                .setIssuedAt(new Date())</span>
+<span class="nc" id="L27">                .setExpiration(new Date(System.currentTimeMillis() + 86400000))</span>
+<span class="nc" id="L28">                .signWith(getSecretKey(), SignatureAlgorithm.HS256)</span>
+<span class="nc" id="L29">                .compact();</span>
+    }
+
+    public String generateToken(String username, Long userId, UsuarioEnt.Rol rol) {
+<span class="nc" id="L33">        return Jwts.builder()</span>
+<span class="nc" id="L34">                .setSubject(username)</span>
+<span class="nc" id="L35">                .claim(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L36">                .claim(&quot;rol&quot;, rol.name())</span>
+<span class="nc" id="L37">                .setIssuedAt(new Date())</span>
+<span class="nc" id="L38">                .setExpiration(new Date(System.currentTimeMillis() + 86400000))</span>
+<span class="nc" id="L39">                .signWith(getSecretKey(), SignatureAlgorithm.HS256)</span>
+<span class="nc" id="L40">                .compact();</span>
+    }
+
+    public String generateToken(String username, Long userId, String nombre, String direccion) {
+<span class="nc" id="L44">        return Jwts.builder()</span>
+<span class="nc" id="L45">                .setSubject(username)</span>
+<span class="nc" id="L46">                .claim(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L47">                .claim(&quot;nombre&quot;, nombre)</span>
+<span class="nc" id="L48">                .claim(&quot;direccion&quot;, direccion)</span>
+<span class="nc" id="L49">                .setIssuedAt(new Date())</span>
+<span class="nc" id="L50">                .setExpiration(new Date(System.currentTimeMillis() + 86400000))</span>
+<span class="nc" id="L51">                .signWith(getSecretKey(), SignatureAlgorithm.HS256)</span>
+<span class="nc" id="L52">                .compact();</span>
+    }
+
+    public String extractUsername(String token) {
+        try {
+<span class="nc" id="L57">            Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L58">            return claims.getSubject();</span>
+<span class="nc" id="L59">        } catch (Exception e) {</span>
+<span class="nc" id="L60">            return null;</span>
+        }
+    }
+
+    public Long extractUserId(String token) {
+        try {
+<span class="nc" id="L66">            Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L67">            return claims.get(&quot;userId&quot;, Long.class);</span>
+<span class="nc" id="L68">        } catch (Exception e) {</span>
+<span class="nc" id="L69">            return null;</span>
+        }
+    }
+
+    public String extractRol(String token) {
+        try {
+<span class="nc" id="L75">            Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L76">            return claims.get(&quot;rol&quot;, String.class);</span>
+<span class="nc" id="L77">        } catch (Exception e) {</span>
+<span class="nc" id="L78">            return null;</span>
+        }
+    }
+
+    public String extractNombre(String token) {
+        try {
+<span class="nc" id="L84">            Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L85">            return claims.get(&quot;nombre&quot;, String.class);</span>
+<span class="nc" id="L86">        } catch (Exception e) {</span>
+<span class="nc" id="L87">            return null;</span>
+        }
+    }
+
+    public String extractDireccion(String token) {
+        try {
+<span class="nc" id="L93">            Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L94">            return claims.get(&quot;direccion&quot;, String.class);</span>
+<span class="nc" id="L95">        } catch (Exception e) {</span>
+<span class="nc" id="L96">            return null;</span>
+        }
+    }
+
+    public boolean isTokenValid(String token, String username) {
+<span class="nc" id="L101">        String extractedUsername = extractUsername(token);</span>
+<span class="nc bnc" id="L102" title="All 6 branches missed.">        return extractedUsername != null &amp;&amp; extractedUsername.equals(username) &amp;&amp; !isTokenExpired(token);</span>
+    }
+
+    private boolean isTokenExpired(String token) {
+        try {
+<span class="nc" id="L107">            Claims claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L108">            return claims.getExpiration().before(new Date());</span>
+<span class="nc" id="L109">        } catch (Exception e) {</span>
+<span class="nc" id="L110">            return true;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

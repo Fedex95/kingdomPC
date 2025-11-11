@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsuarioService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kpback</a> &gt; <a href="index.source.html" class="el_package">com.tienda.kpback.Service</a> &gt; <span class="el_source">UsuarioService.java</span></div><h1>UsuarioService.java</h1><pre class="source lang-java linenums">package com.tienda.kpback.Service;
+
+import com.tienda.kpback.Config.Pass;
+import com.tienda.kpback.Entity.Cart;
+import com.tienda.kpback.Entity.UsuarioEnt;
+import com.tienda.kpback.Repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+<span class="nc" id="L16">public class UsuarioService {</span>
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public List&lt;UsuarioEnt&gt; getAllUsuarios(){
+<span class="nc" id="L21">        return usuarioRepository.findAll();</span>
+    }
+
+    @Transactional
+    public Optional&lt;UsuarioEnt&gt; getUsuarioById(Long id){
+<span class="nc" id="L26">        return usuarioRepository.findById(id);</span>
+    }
+
+    @Transactional
+    public Optional&lt;UsuarioEnt&gt; getUsuarioByUsuario(String usuario){
+<span class="nc" id="L31">        return usuarioRepository.findByUsuario(usuario);</span>
+    }
+
+    public UsuarioEnt saveUsuario(UsuarioEnt usuario){
+        try{
+<span class="nc" id="L36">            String encodedPass = Pass.encrip(usuario.getPass());</span>
+<span class="nc" id="L37">            usuario.setPass(encodedPass);</span>
+
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            if(usuario.getCart() == null){</span>
+<span class="nc" id="L40">                Cart cart = new Cart();</span>
+<span class="nc" id="L41">                cart.setUsuario(usuario);</span>
+<span class="nc" id="L42">                usuario.setCart(cart);</span>
+            }
+<span class="nc" id="L44">            return usuarioRepository.save(usuario);</span>
+<span class="nc" id="L45">        }catch (Exception e){</span>
+<span class="nc" id="L46">            throw new RuntimeException(&quot;Error al guardar usuario&quot;);</span>
+        }
+    }
+
+    public void deleteUsuario(Long id){
+<span class="nc" id="L51">        Optional&lt;UsuarioEnt&gt; usuario = usuarioRepository.findById(id);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if(usuario.isPresent()){</span>
+<span class="nc" id="L53">            usuarioRepository.deleteById(id);</span>
+        }else{
+<span class="nc" id="L55">            throw new RuntimeException(&quot;Usuario no encontrado&quot;);</span>
+        }
+<span class="nc" id="L57">    }</span>
+
+    public UsuarioEnt updateUsuario(Long id, UsuarioEnt usuario){
+<span class="nc" id="L60">        Optional&lt;UsuarioEnt&gt; existing = usuarioRepository.findById(id);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if(existing.isPresent()){</span>
+<span class="nc" id="L62">            UsuarioEnt updatedUsuario = existing.get();</span>
+<span class="nc" id="L63">            updatedUsuario.setUsuario(usuario.getUsuario());</span>
+<span class="nc" id="L64">            updatedUsuario.setNombre(usuario.getNombre());</span>
+<span class="nc" id="L65">            updatedUsuario.setApellido(usuario.getApellido());</span>
+<span class="nc" id="L66">            updatedUsuario.setCedula(usuario.getCedula());</span>
+            try{
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                if(!updatedUsuario.getPass().equals(usuario.getPass())){</span>
+<span class="nc" id="L69">                    String encodedPass = Pass.encrip(usuario.getPass());</span>
+<span class="nc" id="L70">                    updatedUsuario.setPass(encodedPass);</span>
+                }
+<span class="nc" id="L72">            }catch (Exception e){</span>
+<span class="nc" id="L73">                throw new RuntimeException(&quot;Error al encriptar&quot;);</span>
+<span class="nc" id="L74">            }</span>
+<span class="nc" id="L75">            updatedUsuario.setRol(usuario.getRol());</span>
+<span class="nc" id="L76">            updatedUsuario.setEmail(usuario.getEmail());</span>
+<span class="nc" id="L77">            updatedUsuario.setTelefono(usuario.getTelefono());</span>
+<span class="nc" id="L78">            updatedUsuario.setDireccion(usuario.getDireccion());</span>
+<span class="nc" id="L79">            updatedUsuario.setNombreTarjeta(usuario.getNombreTarjeta());</span>
+<span class="nc" id="L80">            updatedUsuario.setNumeroTarjeta(usuario.getNumeroTarjeta());</span>
+<span class="nc" id="L81">            updatedUsuario.setFechaValidez(usuario.getFechaValidez());</span>
+<span class="nc" id="L82">            updatedUsuario.setCvv(usuario.getCvv());</span>
+
+<span class="nc" id="L84">            return usuarioRepository.save(updatedUsuario);</span>
+        }else{
+<span class="nc" id="L86">            throw new RuntimeException(&quot;Usuario no encontrado&quot;);</span>
+        }
+    }
+    public boolean Admin(Long userId){
+<span class="nc" id="L90">        return usuarioRepository.findById(userId)</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                .map(usuario -&gt; usuario.getRol() == UsuarioEnt.Rol.ADMIN)</span>
+<span class="nc" id="L92">                .orElse(false);</span>
+    }
+
+    public boolean checkPass(String encodedPass, String storedHash) throws NoSuchAlgorithmException{
+<span class="nc" id="L96">        String enteredPassHash = Pass.encrip(encodedPass);</span>
+<span class="nc" id="L97">        return storedHash.equals(enteredPassHash);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

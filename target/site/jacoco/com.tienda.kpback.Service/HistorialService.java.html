@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HistorialService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kpback</a> &gt; <a href="index.source.html" class="el_package">com.tienda.kpback.Service</a> &gt; <span class="el_source">HistorialService.java</span></div><h1>HistorialService.java</h1><pre class="source lang-java linenums">package com.tienda.kpback.Service;
+
+import com.tienda.kpback.Entity.Cart;
+import com.tienda.kpback.Entity.Historial;
+import com.tienda.kpback.Entity.PedidoDetalle;
+import com.tienda.kpback.Repository.HistorialRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+
+<span class="nc" id="L17">public class HistorialService {</span>
+    @Autowired
+    private HistorialRepository historialRepository;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Transactional
+    public Historial addCompra(Cart cart){
+<span class="nc" id="L26">        Historial historial = new Historial();</span>
+<span class="nc" id="L27">        historial.setUsuario(cart.getUsuario());</span>
+<span class="nc" id="L28">        historial.setFecha(LocalDate.now());</span>
+
+<span class="nc" id="L30">        List&lt;PedidoDetalle&gt; detalles = cart.getItems().stream().map(item -&gt;{</span>
+<span class="nc" id="L31">            PedidoDetalle detalle = new PedidoDetalle();</span>
+<span class="nc" id="L32">            detalle.setNombreProducto(item.getProducto().getNombre());</span>
+<span class="nc" id="L33">            detalle.setCantidad(item.getCantidad());</span>
+<span class="nc" id="L34">            detalle.setPrecio(item.getProducto().getPrecio());</span>
+<span class="nc" id="L35">            return detalle;</span>
+<span class="nc" id="L36">        }).collect(Collectors.toList());</span>
+
+<span class="nc" id="L38">        historial.setDetalles(detalles);</span>
+
+<span class="nc" id="L40">        historial = historialRepository.save(historial);</span>
+
+<span class="nc" id="L42">        return historial;</span>
+    }
+
+    public List&lt;Historial&gt; findByUsuarioId(Long usuarioId){
+<span class="nc" id="L46">        return historialRepository.findByUsuarioId(usuarioId);</span>
+    }
+
+    public List&lt;Historial&gt; getHistorialAdmin(Long userId){
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(usuarioService.Admin(userId)){</span>
+<span class="nc" id="L51">            return historialRepository.findAll();</span>
+        }else{
+<span class="nc" id="L53">            throw new RuntimeException(&quot;Acceso denegado&quot;);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

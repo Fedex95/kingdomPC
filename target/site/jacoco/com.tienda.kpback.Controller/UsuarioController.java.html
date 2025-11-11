@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsuarioController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kpback</a> &gt; <a href="index.source.html" class="el_package">com.tienda.kpback.Controller</a> &gt; <span class="el_source">UsuarioController.java</span></div><h1>UsuarioController.java</h1><pre class="source lang-java linenums">package com.tienda.kpback.Controller;
+
+import com.tienda.kpback.Entity.UsuarioEnt;
+import com.tienda.kpback.Service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Optional;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+@RestController
+@RequestMapping(&quot;/usuario&quot;)
+@SecurityRequirement(name = &quot;bearerAuth&quot;)
+<span class="fc" id="L19">public class UsuarioController {</span>
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @GetMapping(&quot;get/all&quot;)
+    public ResponseEntity&lt;List&lt;UsuarioEnt&gt;&gt; getAllUsuarios(){
+<span class="fc" id="L25">        List&lt;UsuarioEnt&gt; usuarios = usuarioService.getAllUsuarios();</span>
+<span class="fc" id="L26">        return new ResponseEntity&lt;&gt;(usuarios, HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;/getUsuario/{id}&quot;)
+    public ResponseEntity&lt;UsuarioEnt&gt; getUsuarioById(@PathVariable Long id){
+<span class="fc" id="L31">        Optional&lt;UsuarioEnt&gt; usuario = usuarioService.getUsuarioById(id);</span>
+<span class="fc" id="L32">        return usuario.map(value-&gt; new ResponseEntity&lt;&gt;(value, HttpStatus.OK)).orElseGet(() -&gt; new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND));</span>
+    }
+
+    @PostMapping(&quot;/createUsuario&quot;)
+    public ResponseEntity&lt;UsuarioEnt&gt; createUsuario(@RequestBody UsuarioEnt usuario){
+<span class="fc" id="L37">        UsuarioEnt newUsuario = usuarioService.saveUsuario(usuario);</span>
+<span class="fc" id="L38">        return new ResponseEntity&lt;&gt;(newUsuario, HttpStatus.CREATED);</span>
+    }
+
+    @PutMapping(&quot;/editUsuario/{id}&quot;)
+    public ResponseEntity&lt;UsuarioEnt&gt; editUsuario(@PathVariable Long id, @RequestBody UsuarioEnt usuario){
+        try{
+<span class="fc" id="L44">            UsuarioEnt editUsuario = usuarioService.updateUsuario(id, usuario);</span>
+<span class="fc" id="L45">            return new ResponseEntity&lt;&gt;(editUsuario, HttpStatus.OK);</span>
+<span class="fc" id="L46">        }catch (Exception e){</span>
+<span class="fc" id="L47">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+        }
+    }
+
+    @DeleteMapping(&quot;/deleteUsuario/{id}&quot;)
+    public ResponseEntity&lt;UsuarioEnt&gt; deleteUsuario(@PathVariable Long id){
+        try{
+<span class="fc" id="L54">            usuarioService.deleteUsuario(id);</span>
+<span class="fc" id="L55">            return new ResponseEntity&lt;&gt;(HttpStatus.NO_CONTENT);</span>
+<span class="fc" id="L56">        }catch (Exception e){</span>
+<span class="fc" id="L57">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+        }
+    }
+
+    @PostMapping(&quot;/viewPass&quot;)
+    public ResponseEntity&lt;String&gt; viewPass(@RequestParam String usuario, @RequestParam String pass){
+<span class="fc" id="L63">        Optional&lt;UsuarioEnt&gt; usuarioP = usuarioService.getUsuarioByUsuario(usuario);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if(usuarioP.isPresent()){</span>
+<span class="fc" id="L65">            UsuarioEnt usuarioExist = usuarioP.get();</span>
+            try{
+<span class="fc" id="L67">                boolean correctPass = usuarioService.checkPass(pass, usuarioExist.getPass());</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                if (correctPass){</span>
+<span class="fc" id="L69">                    return new ResponseEntity&lt;&gt;(&quot;Correct Password&quot;, HttpStatus.OK);</span>
+                }else {
+<span class="fc" id="L71">                    return new ResponseEntity&lt;&gt;(&quot;Wrong Password&quot;, HttpStatus.UNAUTHORIZED);</span>
+                }
+<span class="fc" id="L73">            }catch (NoSuchAlgorithmException e){</span>
+<span class="fc" id="L74">                return new ResponseEntity&lt;&gt;(&quot;Error&quot;, HttpStatus.INTERNAL_SERVER_ERROR);</span>
+            }
+        }else{
+<span class="fc" id="L77">            return new ResponseEntity&lt;&gt;(&quot;Usuario no existente&quot;, HttpStatus.NOT_FOUND);</span>
+        }
+    }
+
+    @GetMapping(&quot;{id}/admin&quot;)
+    public ResponseEntity&lt;Boolean&gt; Admin(@PathVariable Long id){
+<span class="fc" id="L83">        boolean Admin = usuarioService.Admin(id);</span>
+<span class="fc" id="L84">        return ResponseEntity.ok(Admin);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
