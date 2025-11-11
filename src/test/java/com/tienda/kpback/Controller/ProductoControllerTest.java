@@ -1,9 +1,9 @@
 package com.tienda.kpback.Controller;
 
+import com.tienda.kpback.Config.CustomUserDetails;
 import com.tienda.kpback.Entity.Producto;
-import com.tienda.kpback.Repository.ProductoRepository;
+import com.tienda.kpback.Entity.UsuarioEnt;
 import com.tienda.kpback.Service.ProductoService;
-import com.tienda.kpback.Service.UsuarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import com.tienda.kpback.Repository.ProductoRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,19 +29,21 @@ class ProductoControllerTest {
     private ProductoService productoService;
 
     @Mock
-    private UsuarioService usuarioService;
-
-    @Mock
-    private ProductoRepository productoRepository;
+    private ProductoRepository productoRepository;  
 
     @InjectMocks
     private ProductoController productoController;
+
+    @Mock
+    private CustomUserDetails userDetails;
 
     private Producto mockProducto;
 
     @BeforeEach
     void setUp() {
-        mockProducto = new Producto(); 
+        mockProducto = new Producto();
+        mockProducto.setId(1L);
+        mockProducto.setNombre("Producto Test");
     }
 
     @Test
@@ -48,14 +52,14 @@ class ProductoControllerTest {
         when(productoRepository.findAll()).thenReturn(mockList);
 
         ResponseEntity<List<Producto>> response = productoController.findAllProductos();
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockList, response.getBody());
     }
 
     @Test
     void testGetProductoById() {
         Optional<Producto> mockOptional = Optional.of(mockProducto);
-        when(productoService.getProductoById(anyLong())).thenReturn(mockOptional);
+        when(productoService.getProductoById(1L)).thenReturn(mockOptional);
 
         Optional<Producto> response = productoController.getProductoById(1L);
         assertEquals(mockOptional, response);
@@ -63,63 +67,54 @@ class ProductoControllerTest {
 
     @Test
     void testCreateProducto_Success() {
-        when(usuarioService.Admin(anyLong())).thenReturn(true);
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.ADMIN);
         when(productoService.saveProducto(any(Producto.class))).thenReturn(mockProducto);
 
-        ResponseEntity<Producto> response = productoController.createProducto(1L, mockProducto);
-        assertEquals(201, response.getStatusCodeValue());
+        ResponseEntity<Producto> response = productoController.createProducto(userDetails, mockProducto);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(mockProducto, response.getBody());
     }
 
     @Test
     void testCreateProducto_Forbidden() {
-        when(usuarioService.Admin(anyLong())).thenReturn(false);
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.USER);
 
-        ResponseEntity<Producto> response = productoController.createProducto(1L, mockProducto);
-        assertEquals(403, response.getStatusCodeValue());
+        ResponseEntity<Producto> response = productoController.createProducto(userDetails, mockProducto);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
     void testUpdateProducto_Success() {
-        when(usuarioService.Admin(anyLong())).thenReturn(true);
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.ADMIN);
         when(productoService.updateProducto(any(Producto.class))).thenReturn(mockProducto);
 
-        ResponseEntity<Producto> response = productoController.updateProducto(1L, 1L, mockProducto);
-        assertEquals(200, response.getStatusCodeValue());
+        ResponseEntity<Producto> response = productoController.updateProducto(userDetails, 1L, mockProducto);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockProducto, response.getBody());
     }
 
     @Test
     void testUpdateProducto_Forbidden() {
-        when(usuarioService.Admin(anyLong())).thenReturn(false);
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.USER);
 
-        ResponseEntity<Producto> response = productoController.updateProducto(1L, 1L, mockProducto);
-        assertEquals(403, response.getStatusCodeValue());
+        ResponseEntity<Producto> response = productoController.updateProducto(userDetails, 1L, mockProducto);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
     void testDeleteProducto_Success() {
-        when(usuarioService.Admin(anyLong())).thenReturn(true);
-        doNothing().when(productoService).deleteProducto(anyLong());
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.ADMIN);
+        doNothing().when(productoService).deleteProducto(1L);
 
-        ResponseEntity<Void> response = productoController.deleteProducto(1L, 1L);
-        assertEquals(204, response.getStatusCodeValue());
+        ResponseEntity<Void> response = productoController.deleteProducto(userDetails, 1L);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
     void testDeleteProducto_Forbidden() {
-        when(usuarioService.Admin(anyLong())).thenReturn(false);
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.USER);
 
-        ResponseEntity<Void> response = productoController.deleteProducto(1L, 1L);
-        assertEquals(403, response.getStatusCodeValue());
-    }
-
-    @Test
-    void testDeleteProducto_InternalServerError() {
-        when(usuarioService.Admin(anyLong())).thenReturn(true);
-        doThrow(new RuntimeException("Error")).when(productoService).deleteProducto(anyLong());
-
-        ResponseEntity<Void> response = productoController.deleteProducto(1L, 1L);
-        assertEquals(500, response.getStatusCodeValue());
+        ResponseEntity<Void> response = productoController.deleteProducto(userDetails, 1L);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }

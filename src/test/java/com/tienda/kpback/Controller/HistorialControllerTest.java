@@ -9,12 +9,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
-
+import com.tienda.kpback.Config.CustomUserDetails;
+import com.tienda.kpback.Entity.UsuarioEnt;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,38 +28,43 @@ public class HistorialControllerTest {
     @InjectMocks
     private HistorialController historialController;
 
+    @Mock
+    private CustomUserDetails userDetails;
+
     private Historial mockHistorial;
 
     @BeforeEach
     void setUp() {
-        mockHistorial = new Historial();  
+        mockHistorial = new Historial();
     }
 
     @Test
     void testGetHistorial() {
+        when(userDetails.getUserId()).thenReturn(1L);
         List<Historial> mockList = Arrays.asList(mockHistorial);
-        when(historialService.findByUsuarioId(anyLong())).thenReturn(mockList);
+        when(historialService.findByUsuarioId(1L)).thenReturn(mockList);
 
-        ResponseEntity<List<Historial>> response = historialController.getHistorial(1L);
-        assertEquals(200, response.getStatusCodeValue());
+        ResponseEntity<List<Historial>> response = historialController.getHistorial(userDetails);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockList, response.getBody());
     }
 
     @Test
     void testGetAllHistorials_Success() {
+        when(userDetails.getUserId()).thenReturn(1L);
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.ADMIN);
         List<Historial> mockList = Arrays.asList(mockHistorial);
-        when(historialService.getHistorialAdmin(anyLong())).thenReturn(mockList);
+        when(historialService.getHistorialAdmin(1L)).thenReturn(mockList);
 
-        ResponseEntity<List<Historial>> response = historialController.getAllHistorials(1L);
-        assertEquals(200, response.getStatusCodeValue());
+        ResponseEntity<List<Historial>> response = historialController.getAllHistorials(userDetails);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockList, response.getBody());
     }
 
     @Test
     void testGetAllHistorials_Error() {
-        when(historialService.getHistorialAdmin(anyLong())).thenThrow(new RuntimeException("Access denied"));
-
-        ResponseEntity<List<Historial>> response = historialController.getAllHistorials(1L);
-        assertEquals(403, response.getStatusCodeValue());
+        when(userDetails.getRol()).thenReturn(UsuarioEnt.Rol.USER);
+        ResponseEntity<List<Historial>> response = historialController.getAllHistorials(userDetails);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }

@@ -3,7 +3,6 @@ package com.tienda.kpback.Service;
 import com.tienda.kpback.Entity.*;
 import com.tienda.kpback.Repository.CartItemRepository;
 import com.tienda.kpback.Repository.CartRepository;
-import com.tienda.kpback.Repository.HistorialRepository;
 import com.tienda.kpback.Repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class CartService {
 
     @Autowired
     private HistorialService historialService;
-
-    @Autowired
-    private HistorialRepository historialRepository;
 
     @Autowired
     private NotificacionesService  notificacionesService;
@@ -67,27 +63,36 @@ public class CartService {
         return cart;
     }
 
-    public Cart updateItemCart(Long cartItemId, int cantidad){
+    public Cart getCartByUserId(Long usuarioId) {
+        UsuarioEnt usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return cartRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado para el usuario"));
+    }
+
+    public Cart updateItemCart(Long cartItemId, int cantidad, Long usuarioId) {
         CartItem item = cartItemRepository.findById(cartItemId)
-                .orElseThrow(()-> new RuntimeException("Item no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Item no encontrado"));
+        // Validar que el item pertenezca al usuario
+        if (item.getCart().getUsuario().getId() != usuarioId) {
+            throw new RuntimeException("No autorizado para actualizar este item");
+        }
         item.setCantidad(cantidad);
         cartItemRepository.save(item);
         return item.getCart();
     }
 
-    public void deleteItemCart(Long cartId, Long itemId){
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(()-> new RuntimeException("Carrito no encontrado"));
-
+    public void deleteItemCart(Long usuarioId, Long itemId) {
+        UsuarioEnt usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Cart cart = cartRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
         CartItem itemDelete = cart.getItems().stream()
                 .filter(item -> item.getId().equals(itemId))
                 .findFirst()
-                .orElseThrow(()-> new RuntimeException("Item no encontrado en el carrito"));
-
+                .orElseThrow(() -> new RuntimeException("Item no encontrado en el carrito"));
         cart.getItems().remove(itemDelete);
-
         cartItemRepository.delete(itemDelete);
-
         cartRepository.save(cart);
     }
 

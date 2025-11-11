@@ -1,6 +1,5 @@
 package com.tienda.kpback.Controller;
 
-
 import com.tienda.kpback.Entity.UsuarioEnt;
 import com.tienda.kpback.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
-@RequestMapping("/usuarios")
-
-
+@RequestMapping("/usuario")
+@SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
