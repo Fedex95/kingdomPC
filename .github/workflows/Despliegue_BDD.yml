@@ -44,6 +44,7 @@ jobs:
             echo "Desplegando BDD y Nginx"
             export DOCKER_BUILDKIT=1
             export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" 
+            export SPRING_DATASOURCE_USERNAME="${SPRING_DATASOURCE_USERNAME}"  # Agrega esta línea
             
             docker-compose build --no-cache
             
@@ -63,3 +64,4 @@ jobs:
           EOF
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
