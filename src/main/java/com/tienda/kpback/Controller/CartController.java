@@ -14,7 +14,7 @@ import com.tienda.kpback.Config.CustomUserDetails;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 public class CartController {
     @Autowired
     private CartService cartService;

@@ -12,7 +12,7 @@ import com.tienda.kpback.Config.CustomUserDetails;
 import com.tienda.kpback.Entity.UsuarioEnt;
 
 @RestController
-@RequestMapping("/historial")
+@RequestMapping("/api/historial")
 @SecurityRequirement(name = "bearerAuth")
 
 public class HistorialController {

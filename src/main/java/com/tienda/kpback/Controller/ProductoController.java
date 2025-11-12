@@ -17,7 +17,7 @@ import com.tienda.kpback.Config.CustomUserDetails;
 import com.tienda.kpback.Entity.UsuarioEnt;
 
 @RestController
-@RequestMapping("/producto")
+@RequestMapping("/api/producto")
 @SecurityRequirement(name = "bearerAuth")
 public class ProductoController {
     @Autowired
