@@ -1,5 +1,6 @@
 package com.tienda.kpback.Controller;
 
+import com.tienda.kpback.Config.CustomUserDetails;
 import com.tienda.kpback.Entity.UsuarioEnt;
 import com.tienda.kpback.Service.JwtService;
 import com.tienda.kpback.Service.UsuarioService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,13 +25,14 @@ public class AuthController {
     private JwtService jwtService;
 
     public static class LoginRequest {
-        @NotBlank(message = "Usuario es obligatorio")
-        private String usuario;
+        @Email(message = "Email inválido")
+        @NotBlank(message = "Email es obligatorio")
+        private String email;  
         @NotBlank(message = "Contraseña es obligatoria")
         private String pass;
 
-        public String getUsuario() { return usuario; }
-        public void setUsuario(String usuario) { this.usuario = usuario; }
+        public String getEmail() { return email; }  
+        public void setEmail(String email) { this.email = email; }
         public String getPass() { return pass; }
         public void setPass(String pass) { this.pass = pass; }
     }
@@ -49,6 +52,8 @@ public class AuthController {
         private String cedula;
         @Email(message = "Email inválido")
         private String email;
+        @NotBlank(message = "Teléfono es obligatorio")
+        private String telefono;
 
         public String getUsuario() { return usuario; }
         public void setUsuario(String usuario) { this.usuario = usuario; }
@@ -62,32 +67,8 @@ public class AuthController {
         public void setCedula(String cedula) { this.cedula = cedula; }
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest credentials) {
-        String usuario = credentials.getUsuario();
-        String pass = credentials.getPass();
-
-        Optional<UsuarioEnt> userOpt = usuarioService.getUsuarioByUsuario(usuario);
-        if (userOpt.isPresent()) {
-            UsuarioEnt user = userOpt.get();
-            try {
-                if (usuarioService.checkPass(pass, user.getPass())) {
-                    String token = jwtService.generateToken(
-                            user.getUsuario(),
-                            user.getId(),
-                            user.getNombre(),
-                            user.getDireccion(),
-                            user.getRol()
-                    );
-                    return ResponseEntity.ok(Map.of("token", token));
-                }
-            } catch (Exception e) {
-                return ResponseEntity.status(500).body("Error interno en autenticación");
-            }
-        }
-        return ResponseEntity.status(401).body("Credenciales inválidas");
+        public String getTelefono() { return telefono; }
+        public void setTelefono(String telefono) { this.telefono = telefono; }
     }
 
     @PostMapping("/register")
@@ -106,12 +87,86 @@ public class AuthController {
             newUser.setApellido(request.getApellido());
             newUser.setCedula(request.getCedula());
             newUser.setEmail(request.getEmail());
+            newUser.setTelefono(request.getTelefono());
             newUser.setRol(UsuarioEnt.Rol.USER);
 
             usuarioService.saveUsuario(newUser);
-            return ResponseEntity.ok("Usuario registrado exitosamente");
+            usuarioService.sendVerificationEmail(newUser); 
+            return ResponseEntity.ok("Usuario registrado. Revisa tu email para verificar.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al registrar usuario: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verify(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String code = request.get("code");
+        Optional<UsuarioEnt> userOpt = usuarioService.getUsuarioByEmail(email);
+        if (userOpt.isPresent()) {
+            UsuarioEnt user = userOpt.get();
+            if (code.equals(user.getVerificationCode())) {
+                user.setVerified(true);
+                user.setVerificationCode(null); 
+                usuarioService.saveUsuario(user);
+                return ResponseEntity.ok("Cuenta verificada exitosamente");
+            }
+        }
+        return ResponseEntity.status(400).body("Código inválido");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest credentials) {
+        String email = credentials.getEmail(); 
+        String pass = credentials.getPass();
+
+        Optional<UsuarioEnt> userOpt = usuarioService.getUsuarioByEmail(email); 
+        if (userOpt.isPresent()) {
+            UsuarioEnt user = userOpt.get();
+            try {
+                boolean passMatches = usuarioService.checkPass(pass, user.getPass());
+                if (passMatches) {
+                    if (!user.isVerified()) {
+                        return ResponseEntity.status(403).body("Cuenta no verificada. Revisa tu email.");
+                    }
+                    Map<String, Object> extraClaims = new HashMap<>();
+                    extraClaims.put("userId", user.getId().toString());
+                    extraClaims.put("rol", user.getRol().name());
+                    extraClaims.put("nombre", user.getNombre());
+
+                    CustomUserDetails userDetails = new CustomUserDetails(
+                            user.getId(),
+                            user.getUsuario(),
+                            user.getPass(),
+                            user.getRol()
+                    );
+
+                    String token = jwtService.generateToken(extraClaims, userDetails);
+                    String refreshToken = jwtService.generateRefreshToken(userDetails);
+                    return ResponseEntity.ok(Map.of("token", token, "refreshToken", refreshToken));
+                } else {
+                    return ResponseEntity.status(401).body("Credenciales inválidas");
+                }
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Error interno en autenticación");
+            }
+        } else {
+            System.out.println("Usuario no encontrado");
+            return ResponseEntity.status(401).body("Credenciales inválidas");
+        }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Refresh token requerido");
+        }
+        String refreshToken = authHeader.substring(7);
+        try {
+            String newAccessToken = jwtService.refreshAccessToken(refreshToken);
+            return ResponseEntity.ok(Map.of("token", newAccessToken));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Refresh token inválido o expirado");
         }
     }
 }

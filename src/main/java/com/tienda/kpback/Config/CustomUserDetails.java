@@ -1,39 +1,39 @@
 package com.tienda.kpback.Config;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.tienda.kpback.Entity.UsuarioEnt;
+import lombok.Getter;  
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
+@Getter  
 public class CustomUserDetails implements UserDetails {
-    private Long userId;
+    private UUID userId;
     private String username;
     private String password;
     private UsuarioEnt.Rol rol;
-    private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(Long userId, String username, String password, UsuarioEnt.Rol rol, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(UUID userId, String username, String password, UsuarioEnt.Rol rol) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.rol = rol;
-        this.authorities = authorities != null ? authorities : Collections.emptyList();
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public UsuarioEnt.Rol getRol() {
-        return rol;
+    public CustomUserDetails(UUID userId, String username, String password, Collection<? extends GrantedAuthority> authorities, UsuarioEnt.Rol rol) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.rol = rol;
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol.name()));
     }
 
     @Override
@@ -42,8 +42,8 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public String getUsername() {
+        return username;
     }
 
     @Override
