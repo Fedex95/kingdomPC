@@ -2,21 +2,29 @@ package com.tienda.kpback;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 
-/**
- * Clase principal de arranque de la aplicación Spring Boot.
- */
+@OpenAPIDefinition(
+    info = @Info(
+        title = "Kingdom PC API",
+        version = "1.0",
+        description = "API para la aplicación Kingdom PC"
+    )
+)
+// Esquema Bearer JWT
+@SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT"
+)
 @SpringBootApplication
-public final class KpbackApplication {
-
-    private KpbackApplication() {
-    }
-
-    /**
-     * Punto de entrada de la aplicación.
-     * @param args argumentos de línea de comandos
-     */
-    public static void main(final String[] args) {
+public class KpbackApplication {
+    public static void main(String[] args) {
         SpringApplication.run(KpbackApplication.class, args);
     }
+
 }
