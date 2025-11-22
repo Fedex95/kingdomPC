@@ -32,6 +32,10 @@ public class UsuarioEnt {
     @JsonIgnore
     private String pass;
 
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Cart cart;
+
     @Enumerated(EnumType.STRING)
     private Rol rol;
     public enum Rol{

@@ -27,19 +27,8 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.access-token-ttl-minutes}")
-    private long accessTokenTtlMinutes;
-
-    @Value("${jwt.refresh-token-ttl-minutes}")
-    private long refreshTokenTtlMinutes;
-
-    private long getAccessTokenTtlMs() {
-        return TimeUnit.MINUTES.toMillis(accessTokenTtlMinutes);
-    }
-
-    private long getRefreshTokenTtlMs() {
-        return TimeUnit.MINUTES.toMillis(refreshTokenTtlMinutes);
-    }
+    private static final long ACCESS_TOKEN_TTL_MS = TimeUnit.MINUTES.toMillis(15);   // 15 min
+    private static final long REFRESH_TOKEN_TTL_MS = TimeUnit.MINUTES.toMillis(60);      // 60 min
 
     @Autowired
     private com.tienda.kpback.Service.UsuarioService usuarioService;
@@ -76,7 +65,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + getAccessTokenTtlMs())) // acceso corto
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_TTL_MS)) // acceso corto
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -86,7 +75,7 @@ public class JwtService {
                 .builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + getRefreshTokenTtlMs()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_TTL_MS))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
