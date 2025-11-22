@@ -30,10 +30,12 @@ class CartControllerTest {
     private CustomUserDetails userDetails;
 
     private UUID mockUserId; 
+    private UUID mockCartItemId; 
 
     @BeforeEach
     void setUp() {
-        mockUserId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");   
+        mockUserId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");  
+        mockCartItemId = UUID.fromString("789e0123-e89b-12d3-a456-426614174002"); 
     }
 
     @Test
@@ -46,5 +48,27 @@ class CartControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockCart, response.getBody());
         verify(cartService).getCartByUsuarioId(mockUserId); 
+    }
+
+    @Test
+    void testUpdateItemCantidad() {
+        when(userDetails.getUserId()).thenReturn(mockUserId);  
+        Cart mockCart = new Cart();
+        when(cartService.updateItemCart(mockCartItemId, 5, mockUserId)).thenReturn(mockCart); 
+
+        ResponseEntity<Cart> response = cartController.updateItemCantidad(userDetails, mockCartItemId, 5);  
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockCart, response.getBody());
+        verify(cartService).updateItemCart(mockCartItemId, 5, mockUserId);  
+    }
+
+    @Test
+    void testDeleteItemCart() {
+        when(userDetails.getUserId()).thenReturn(mockUserId); 
+        doNothing().when(cartService).deleteItemCart(mockUserId, mockCartItemId);  
+
+        ResponseEntity<Void> response = cartController.deleteItemCart(userDetails, mockCartItemId); 
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(cartService).deleteItemCart(mockUserId, mockCartItemId);
     }
 }

@@ -1,5 +1,6 @@
 package com.tienda.kpback.Service;
 
+import com.tienda.kpback.Entity.Cart;
 import com.tienda.kpback.Entity.UsuarioEnt;
 import com.tienda.kpback.Repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -58,6 +59,11 @@ public class UsuarioService {
                 usuario.setPass(encoded);
             } 
 
+            if(usuario.getCart() == null){
+                Cart cart = new Cart();
+                cart.setUsuario(usuario);
+                usuario.setCart(cart);
+            }
             return usuarioRepository.save(usuario);
         }catch (Exception e){
             throw new RuntimeException("Error al guardar usuario", e);

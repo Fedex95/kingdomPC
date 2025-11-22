@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.tienda.kpback.Config.CustomUserDetails;
 import java.util.UUID;
@@ -25,6 +26,13 @@ public class CartController {
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
+
+    @PostMapping("/actualizar/{cartItemId}")
+    public ResponseEntity<Cart> updateItemCantidad(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable UUID cartItemId, @RequestBody int cantidad) {
+        UUID userId = userDetails.getUserId();
+        Cart cart = cartService.updateItemCart(cartItemId, cantidad, userId);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
+    }
 
     @DeleteMapping("/eliminar/{itemId}")
     public ResponseEntity<Void> deleteItemCart(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable UUID itemId) {
