@@ -1,0 +1,77 @@
+name: CD DevOps Backend
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: |
+          echo "Pushing image..."
+          docker push ${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+          docker tag ${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }} ${{ secrets.DOCKER_IMAGE_NAME }}:latest
+          docker push ${{ secrets.DOCKER_IMAGE_NAME }}:latest
+          echo "Push completed"
+
+      - name: Setup SSH
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.EC2_SSH_KEY }}
+          known_hosts: unnecessary
+
+      - name: Add EC2 to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22 -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy backend on EC2
+        run: |
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=10 ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
+            set -euo pipefail
+
+            echo "Pulling image from Docker Hub..."
+            docker pull ${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+
+            echo "Stopping old container if exists..."
+            docker stop ${{ secrets.CONTAINER_NAME }} || echo "No container running"
+            docker rm ${{ secrets.CONTAINER_NAME }} || echo "No container to remove"
+
+            echo "Running new container..."
+            docker run -d --name ${{ secrets.CONTAINER_NAME }} --network ${{ secrets.NETWORK_NAME }} -p 8080:8080 \
+              -e SPRING_DATASOURCE_URL="${SPRING_DATASOURCE_URL}" \
+              -e SPRING_DATASOURCE_USERNAME="${SPRING_DATASOURCE_USERNAME}" \
+              -e SPRING_DATASOURCE_PASSWORD="${POSTGRES_PASSWORD}" \
+              -e JWT_SECRET="${JWT_SECRET}" \
+              -v ${{ secrets.HOST_LOG_PATH }}:/app/logs \
+              ${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+
+            echo "Verifying container..."
+            docker ps
+            echo "Last logs:"
+            docker logs ${{ secrets.CONTAINER_NAME }} | tail -20
+
+            echo "Deployment completed successfully"
+          EOF
+        env:
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
