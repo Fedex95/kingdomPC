@@ -118,7 +118,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configLocation>src/main/java/com/tienda/kpback/Config/google_checks.xml</configLocation>
+                    <configLocation>src/main/resources/google_checks.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                 </configuration>
