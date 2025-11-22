@@ -19,6 +19,9 @@ public class CartService {
     private CartItemRepository cartItemRepository;
 
     @Autowired
+    private LibroService libroService;
+
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
     public Cart getCartByUsuarioId(UUID usuarioId) { 
@@ -30,6 +33,31 @@ public class CartService {
                     newCart.setUsuario(usuario);
                     return cartRepository.save(newCart);
                 });
+    }
+
+    public Cart addItemToCart(UUID usuarioId, UUID libroId, int cantidad) {  
+        Cart cart = getCartByUsuarioId(usuarioId);
+        Libro libro = libroService.getLibroById(libroId)  
+                .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
+
+        CartItem existingItem = cart.getItems().stream()
+                .filter(item -> item.getLibro().getId().equals(libroId))  
+                .findFirst()
+                .orElse(null);
+
+        if (existingItem != null) {
+            existingItem.setCantidad(existingItem.getCantidad() + cantidad);
+            cartItemRepository.save(existingItem);
+        } else {
+            CartItem item = new CartItem();
+            item.setCart(cart);
+            item.setLibro(libro);
+            item.setCantidad(cantidad);
+            cart.getItems().add(item);
+            cartItemRepository.save(item);
+        }
+
+        return cartRepository.save(cart);
     }
 
     public Cart updateItemCart(UUID cartItemId, int cantidad, UUID usuarioId) {  
