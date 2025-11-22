@@ -32,10 +32,10 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build and test backend with Maven (with coverage)
-        run: mvn clean verify --file ./pom.xml
+        run: mvn -B clean verify
 
       - name: Run Checkstyle (format test)
-        run: mvn checkstyle:check --file ./pom.xml
+        run: mvn -B checkstyle:check
 
       - name: Upload target report
         uses: actions/upload-artifact@v4
