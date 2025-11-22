@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 
+/**
+ * Clase principal para iniciar la aplicación Spring Boot.
+ */
 @OpenAPIDefinition(
     info = @Info(
         title = "Kingdom PC API",
@@ -14,7 +17,6 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
         description = "API para la aplicación Kingdom PC"
     )
 )
-// Esquema Bearer JWT
 @SecurityScheme(
     name = "bearerAuth",
     type = SecuritySchemeType.HTTP,
@@ -22,9 +24,21 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
     bearerFormat = "JWT"
 )
 @SpringBootApplication
-public class KpbackApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(KpbackApplication.class, args);
+public final class KpbackApplication {
+
+    /**
+     * Constructor privado para evitar instanciación.
+     */
+    private KpbackApplication() {
+        throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * Método principal de la aplicación.
+     *
+     * @param args argumentos de la aplicación.
+     */
+    public static void main(final String[] args) {
+        SpringApplication.run(KpbackApplication.class, args);
+    }
 }
