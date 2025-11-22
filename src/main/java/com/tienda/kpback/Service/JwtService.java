@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,22 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "CuAcTxf3KL7h0ZATFHgQbAPhWw9KZ6pYN+6CMN+P2A8=";
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-    private static final long ACCESS_TOKEN_TTL_MS = TimeUnit.MINUTES.toMillis(15);   // 15 min
-    private static final long REFRESH_TOKEN_TTL_MS = TimeUnit.MINUTES.toMillis(60);      // 60 min
+    @Value("${jwt.access-token-ttl-minutes}")
+    private long accessTokenTtlMinutes;
+
+    @Value("${jwt.refresh-token-ttl-minutes}")
+    private long refreshTokenTtlMinutes;
+
+    private long getAccessTokenTtlMs() {
+        return TimeUnit.MINUTES.toMillis(accessTokenTtlMinutes);
+    }
+
+    private long getRefreshTokenTtlMs() {
+        return TimeUnit.MINUTES.toMillis(refreshTokenTtlMinutes);
+    }
 
     @Autowired
     private com.tienda.kpback.Service.UsuarioService usuarioService;
@@ -63,7 +76,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_TTL_MS)) // acceso corto
+                .setExpiration(new Date(System.currentTimeMillis() + getAccessTokenTtlMs())) // acceso corto
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -73,7 +86,7 @@ public class JwtService {
                 .builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_TTL_MS))
+                .setExpiration(new Date(System.currentTimeMillis() + getRefreshTokenTtlMs()))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -126,7 +139,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
