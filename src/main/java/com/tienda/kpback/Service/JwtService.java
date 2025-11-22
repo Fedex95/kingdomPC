@@ -28,7 +28,7 @@ public class JwtService {
     private String SECRET_KEY;  
 
     private static final long ACCESS_TOKEN_TTL_MS = TimeUnit.MINUTES.toMillis(15);   // 15 min
-    private static final long REFRESH_TOKEN_TTL_MS = TimeUnit.MINUTES.toMillis(60);      // 60 min
+    private static final long REFRESH_TOKEN_TTL_MS = TimeUnit.MINUTES.toMillis(60);      // 60 min 
 
     @Autowired
     private com.tienda.kpback.Service.UsuarioService usuarioService;
