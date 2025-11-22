@@ -8,7 +8,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_ACCESS_TOKEN_TTL_MINUTES: ${{ vars.JWT_ACCESS_TOKEN_TTL_MINUTES }}
+      JWT_REFRESH_TOKEN_TTL_MINUTES: ${{ vars.JWT_REFRESH_TOKEN_TTL_MINUTES }}
+      SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -60,6 +66,8 @@ jobs:
               -e SPRING_DATASOURCE_USERNAME="${SPRING_DATASOURCE_USERNAME}" \
               -e SPRING_DATASOURCE_PASSWORD="${POSTGRES_PASSWORD}" \
               -e JWT_SECRET="${JWT_SECRET}" \
+              -e JWT_ACCESS_TOKEN_TTL_MINUTES="${JWT_ACCESS_TOKEN_TTL_MINUTES}" \
+              -e JWT_REFRESH_TOKEN_TTL_MINUTES="${JWT_REFRESH_TOKEN_TTL_MINUTES}" \
               -v ${{ secrets.HOST_LOG_PATH }}:/app/logs \
               ${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }}
 
@@ -75,3 +83,5 @@ jobs:
           SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ACCESS_TOKEN_TTL_MINUTES: ${{ vars.JWT_ACCESS_TOKEN_TTL_MINUTES }}
+          JWT_REFRESH_TOKEN_TTL_MINUTES: ${{ vars.JWT_REFRESH_TOKEN_TTL_MINUTES }}
