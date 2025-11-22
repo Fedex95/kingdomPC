@@ -26,6 +26,13 @@ public class CartController {
     }
 
 
+    @PostMapping("/actualizar/{cartItemId}")
+    public ResponseEntity<Cart> updateItemCantidad(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable UUID cartItemId, @RequestBody int cantidad) {
+        UUID userId = userDetails.getUserId();
+        Cart cart = cartService.updateItemCart(cartItemId, cantidad, userId);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
+    }
+
     @DeleteMapping("/eliminar/{itemId}")
     public ResponseEntity<Void> deleteItemCart(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable UUID itemId) {
         UUID userId = userDetails.getUserId();
