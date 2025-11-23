@@ -2,6 +2,7 @@ package com.tienda.kpback.Controller;
 
 import com.tienda.kpback.Entity.Prestamo;
 import com.tienda.kpback.Service.PrestamoService;
+import com.tienda.kpback.Service.CartService;  
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,20 @@ public class PrestamoController {
     @Autowired
     private PrestamoService prestamoService;
 
+    @Autowired
+    private CartService cartService;  
+
+    @GetMapping("/historial")
+    @Transactional(readOnly = true)  
+    public ResponseEntity<List<Prestamo>> getHistorialUsuario(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails.getRol() != UsuarioEnt.Rol.USER && userDetails.getRol() != UsuarioEnt.Rol.ADMIN) {  
+            return ResponseEntity.status(403).build();
+        }
+        UUID userId = userDetails.getUserId();
+        List<Prestamo> prestamos = prestamoService.findByUsuarioId(userId); 
+        return ResponseEntity.ok(prestamos);
+    }
+
     @GetMapping("/all")
     @Transactional(readOnly = true)  
     public ResponseEntity<List<Prestamo>> getAllPrestamos(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -30,6 +45,29 @@ public class PrestamoController {
             return ResponseEntity.ok(prestamos);
         } else {
             return ResponseEntity.status(403).build();
+        }
+    }
+
+    @PostMapping  
+    public ResponseEntity<?> createPrestamo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UUID userId = userDetails.getUserId();
+        try {
+            var cart = cartService.getCartByUsuarioId(userId);
+            if (cart.getItems().isEmpty()) {
+                return ResponseEntity.badRequest().body("El carrito está vacío");  
+            }
+
+            Prestamo prestamo = prestamoService.addPrestamo(cart);
+
+            cartService.clearCart(userId);
+
+            return ResponseEntity.ok(prestamo);
+        } catch (RuntimeException e) {
+            
+            return ResponseEntity.badRequest().body(e.getMessage());  // 400 con mensaje
+        } catch (Exception e) {
+            // Otros errores
+            return ResponseEntity.status(500).body("Error interno del servidor");  // 500 genérico
         }
     }
 
