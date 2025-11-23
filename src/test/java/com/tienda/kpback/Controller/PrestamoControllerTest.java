@@ -3,6 +3,7 @@ package com.tienda.kpback.Controller;
 import com.tienda.kpback.Entity.Prestamo;
 import com.tienda.kpback.Service.PrestamoService;
 import com.tienda.kpback.Service.CartService;
+import com.tienda.kpback.Entity.Cart;
 import com.tienda.kpback.Repository.PrestamoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import java.util.UUID;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-
+import com.tienda.kpback.Entity.CartItem; 
 
 
 @ExtendWith(MockitoExtension.class)
@@ -51,10 +52,12 @@ public class PrestamoControllerTest {
     private UsuarioEnt mockUsuario;  
 
     private UUID mockUserId;
+    private Cart mockCart;
 
     @BeforeEach
     void setUp() {
         mockUserId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+        mockCart = mock(Cart.class);
         when(mockPrestamo.getUsuario()).thenReturn(mockUsuario);
         when(mockUsuario.getId()).thenReturn(mockUserId);
     }
@@ -78,6 +81,39 @@ public class PrestamoControllerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
+    @Test
+    void testCreatePrestamo_Success() {
+        when(userDetails.getUserId()).thenReturn(mockUserId);
+        when(cartService.getCartByUsuarioId(mockUserId)).thenReturn(mockCart);
+        when(mockCart.getItems()).thenReturn(Arrays.asList(mock(CartItem.class)));  
+        when(prestamoService.addPrestamo(mockCart)).thenReturn(mockPrestamo);
+
+        ResponseEntity<?> response = prestamoController.createPrestamo(userDetails);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockPrestamo, response.getBody());
+        verify(cartService).clearCart(mockUserId);
+    }
+
+    @Test
+    void testCreatePrestamo_CartEmpty() {
+        when(userDetails.getUserId()).thenReturn(mockUserId);
+        when(cartService.getCartByUsuarioId(mockUserId)).thenReturn(mockCart);
+        when(mockCart.getItems()).thenReturn(Arrays.asList());  
+
+        ResponseEntity<?> response = prestamoController.createPrestamo(userDetails);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("El carrito está vacío", response.getBody());
+    }
+
+    @Test
+    void testCreatePrestamo_Error() {
+        when(userDetails.getUserId()).thenReturn(mockUserId);
+        when(cartService.getCartByUsuarioId(mockUserId)).thenThrow(new RuntimeException("Error"));
+
+        ResponseEntity<?> response = prestamoController.createPrestamo(userDetails);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Error", response.getBody());
+    }
 
     @Test
     void testUpdateEstado_Success() {
